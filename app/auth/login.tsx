@@ -1,4 +1,4 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import React from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -8,6 +8,8 @@ import SmartInput from "../../components/SmartInput";
 import { colors } from "../../design/theme";
 
 export default function LoginScreen() {
+	const router = useRouter();
+
 	return (
 		<SafeAreaView className="flex-1 bg-[#ffffff]">
 			<View className="flex-1 px-6 pt-12 pb-10">
@@ -30,7 +32,7 @@ export default function LoginScreen() {
 				</View>
 
 				<View className="mt-20">
-					<PrimaryButton title="Masuk" onPress={() => {}} />
+					<PrimaryButton title="Masuk" onPress={() => router.replace("/petani/home")} />
 				</View>
 
 				<View className="items-center mt-auto">

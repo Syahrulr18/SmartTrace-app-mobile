@@ -11,6 +11,7 @@ export default function RootLayout() {
 		"Montserrat-Medium": require("../assets/font/Montserrat-Medium.ttf"),
 		"Montserrat-SemiBold": require("../assets/font/Montserrat-SemiBold.ttf"),
 		"Montserrat-ExtraBold": require("../assets/font/Montserrat-ExtraBold.ttf"),
+		"Montserrat-Bold": require("../assets/font/Montserrat-Bold.ttf"),
 	});
 
 	useEffect(() => {

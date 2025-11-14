@@ -18,7 +18,7 @@ export const shadows = {
 			shadowColor: "rgba(0,0,0,0.35)",
 		},
 	}),
-    
+
 };
 
 
