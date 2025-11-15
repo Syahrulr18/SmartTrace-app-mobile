@@ -19,11 +19,11 @@ export default function StatusBadge({ label, variant = "available" }: StatusBadg
 
 	return (
 		<View
-			className="px-3 py-1 rounded-full border"
+			className="px-3 py-1 rounded-xl border"
 			style={{ backgroundColor: palette.bg, borderColor: palette.border }}
 		>
 			<Text
-				className="text-[12px]"
+				className="text-[10px]"
 				style={{ color: palette.text, fontFamily: "Montserrat-SemiBold" }}
 			>
 				{label}

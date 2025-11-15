@@ -41,14 +41,14 @@ function MenuItem({
   icon: ImageSourcePropType;
 }) {
   return (
-    <TouchableOpacity className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mb-3">
+    <TouchableOpacity className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mb-3 shadow-xl">
       <View className="flex-row items-center gap-3">
         <Image
           source={icon}
           style={{ width: 20, height: 30, resizeMode: "contain" }}
         />
         <Text
-          className="text-[12px] text-[#0E1B2A]"
+          className="text-[12px] text-[#0E1B2A] ml-3"
           style={{ fontFamily: "Montserrat-SemiBold" }}
         >
           {label}
@@ -56,7 +56,7 @@ function MenuItem({
       </View>
 
       <Text
-        className="text-[18px] text-[#CBD5F5]"
+        className="text-[18px] text-[#D1D5DB]"
         style={{ fontFamily: "Montserrat-ExtraBold" }}
       >
         ›
@@ -69,7 +69,7 @@ export default function FarmerProfileScreen() {
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: "transparent" }}>
       <ScrollView
-        className="flex-1 bg-[#F6F6F6]"
+        className="flex-1 bg-white"
         contentContainerClassName="pb-20"
         showsVerticalScrollIndicator={false}
       >
@@ -77,7 +77,7 @@ export default function FarmerProfileScreen() {
           colors={["#2D5652", "#96D3CC"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          className="px-6 pt-10  rounded-b-[32px]"
+          className="px-6 pt-10 pb-20 rounded-b-[32px]"
         >
           <View className="flex-row items-center justify-between">
             <View>
@@ -107,8 +107,8 @@ export default function FarmerProfileScreen() {
             </View>
           </View>
         </LinearGradient>
-        <View className="bg-[#F6F6F6] ">
-          <View className="flex-1 justify-center items-center mb-10">
+        <View className="bg-white rounded-t-[30px] -mt-12 pt-8 drop-shadow-2xl">
+          <View className="items-center justify-center pb-6">
             <Text
               className="text-black text-[20px] mt-4"
               style={{ fontFamily: "Montserrat-Bold" }}
@@ -123,12 +123,12 @@ export default function FarmerProfileScreen() {
             </Text>
           </View>
 
-          <View className="px-6 -mt-10 ">
+          <View className="px-6">
             {menuItems.map((item) => (
               <MenuItem key={item.id} label={item.label} icon={item.icon} />
             ))}
 
-            <TouchableOpacity className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mt-2 border border-[#FECACA]">
+            <TouchableOpacity className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mt-4 shadow-md">
               <View className="flex-row items-center gap-3">
                 <Image
                   source={require("../../assets/icon-on-profil/logout.png")}
