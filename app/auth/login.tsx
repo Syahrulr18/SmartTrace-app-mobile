@@ -128,9 +128,9 @@ export default function LoginScreen() {
 					<PrimaryButton
 						title={isLoading ? "" : "Masuk"}
 						// onPress={handleLogin}
-						// onPress={() => router.replace("../petani/home" as any)}
+						onPress={() => router.replace("../petani/home" as any)}
 						// onPress={() => router.replace("../konsumen/qr-scan" as any)}
-						onPress={() => router.replace("../distributor/home" as any)}
+						// onPress={() => router.replace("../distributor/home" as any)}
 						disabled={isLoading}
 					/>
 					{isLoading && (
