@@ -4,7 +4,60 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { ActivityIndicator, View } from "react-native";
+import { AuthProvider, useAuth } from "../context/AuthContext";
 import "./global.css";
+
+function RootLayoutNavigation() {
+	const { isSignedIn, isLoading, user } = useAuth();
+
+	if (isLoading) {
+		return (
+			<View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#ffffff" }}>
+				<ActivityIndicator size="large" color="#3b82f6" />
+			</View>
+		);
+	}
+
+	return (
+		<>
+			<StatusBar style="dark" backgroundColor="#ffffff" translucent={false} />
+			<Stack screenOptions={{ headerShown: false }}>
+				{!isSignedIn ? (
+					// Auth Stack - unauthenticated users
+					<Stack.Screen
+						name="auth"
+						options={{
+							headerShown: false,
+						}}
+					/>
+				) : (
+					// App Stack - authenticated with role selected
+					<>
+						<Stack.Screen
+							name="petani"
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen
+							name="distributor"
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen
+							name="konsumen"
+							options={{
+								headerShown: false,
+							}}
+						/>
+					</>
+				)}
+			</Stack>
+		</>
+	);
+}
 
 export default function RootLayout() {
 	const [fontsLoaded] = useFonts({
@@ -29,10 +82,13 @@ export default function RootLayout() {
 		NavigationBar.setButtonStyleAsync("dark").catch(() => {});
 	}, []);
 
+	if (!fontsLoaded) {
+		return null;
+	}
+
 	return (
-		<>
-			<StatusBar style="dark" backgroundColor="#ffffff" translucent={false} />
-			<Stack screenOptions={{ headerShown: false }} />
-		</>
+		<AuthProvider>
+			<RootLayoutNavigation />
+		</AuthProvider>
 	);
 }

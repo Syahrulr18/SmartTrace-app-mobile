@@ -20,7 +20,7 @@ export default function StatusBadge({ label, variant = "available" }: StatusBadg
 	return (
 		<View
 			className="px-3 py-1 rounded-xl border"
-			style={{ backgroundColor: palette.bg, borderColor: palette.border }}
+			style={{ backgroundColor: palette.bg, borderColor: palette.border, borderWidth: 2 }}
 		>
 			<Text
 				className="text-[10px]"

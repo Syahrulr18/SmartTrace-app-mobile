@@ -1,6 +1,8 @@
 import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
+  Alert,
   Image,
   ImageSourcePropType,
   ScrollView,
@@ -9,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "../../context/AuthContext";
 
 const menuItems = [
   {
@@ -66,6 +69,31 @@ function MenuItem({
 }
 
 export default function FarmerProfileScreen() {
+  const router = useRouter();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Konfirmasi Keluar",
+      "Apakah Anda yakin ingin keluar dari akun?",
+      [
+        {
+          text: "Batal",
+          onPress: () => {},
+          style: "cancel",
+        },
+        {
+          text: "Keluar",
+          onPress: async () => {
+            await logout();
+            router.replace("/auth/login" as any);
+          },
+          style: "destructive",
+        },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: "transparent" }}>
       <ScrollView
@@ -77,7 +105,7 @@ export default function FarmerProfileScreen() {
           colors={["#2D5652", "#96D3CC"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          className="px-6 pt-10 pb-20 rounded-b-[32px]"
+          className="px-6 pt-5 pb-20 rounded-b-[32px]"
         >
           <View className="flex-row items-center justify-between">
             <View>
@@ -128,7 +156,10 @@ export default function FarmerProfileScreen() {
               <MenuItem key={item.id} label={item.label} icon={item.icon} />
             ))}
 
-            <TouchableOpacity className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mt-4 shadow-md">
+            <TouchableOpacity
+              onPress={handleLogout}
+              className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mt-4 shadow-md border border-red-200"
+            >
               <View className="flex-row items-center gap-3">
                 <Image
                   source={require("../../assets/icon-on-profil/logout.png")}
