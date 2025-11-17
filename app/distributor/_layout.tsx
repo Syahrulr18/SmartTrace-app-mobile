@@ -4,12 +4,13 @@ import { View } from "react-native";
 import DistributorTabIcon from "../../components/icons/DistributorTabIcon";
 
 type TabConfig = {
-	name: "home" | "tracking" | "profil";
+	name: "home" | "marketplace" | "tracking" | "profil";
 	label: string;
 };
 
 const TABS: TabConfig[] = [
 	{ name: "home", label: "Beranda" },
+	{ name: "marketplace", label: "Marketplace" },
 	{ name: "tracking", label: "Tracking" },
 	{ name: "profil", label: "Profil" },
 ];
@@ -37,7 +38,7 @@ export default function DistributorTabsLayout() {
 				tabBarShowLabel: false,
 				tabBarStyle: {
 					borderTopWidth: 0,
-					height: 45,
+					height: 80,
 					paddingBottom: 12,
 					backgroundColor: "#ffffff",
 					position: "absolute",

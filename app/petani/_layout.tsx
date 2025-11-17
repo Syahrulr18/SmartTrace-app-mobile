@@ -37,7 +37,7 @@ export default function FarmerTabsLayout() {
 				tabBarShowLabel: false,
 				tabBarStyle: {
 					borderTopWidth: 0,
-					height: 45,
+					height: 80,
 					paddingBottom: 12,
 					backgroundColor: "#ffffff",
 					position: "absolute",

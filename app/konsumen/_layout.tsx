@@ -37,7 +37,7 @@ export default function ConsumerTabsLayout() {
 				tabBarShowLabel: false,
 				tabBarStyle: {
 					borderTopWidth: 0,
-					height: 45,
+					height: 75,
 					paddingBottom: 12,
 					backgroundColor: "#ffffff",
 					position: "absolute",
