@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import {
-	Alert,
-	Image,
-	ScrollView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
+    Alert,
+    Image,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchIcon from "../../components/icons/SearchIcon";
@@ -175,13 +175,7 @@ const MarketplaceScreen = () => {
 						className="text-[16px]"
 						style={{ color: "#0E1B2A", fontFamily: "Montserrat-Bold" }}
 					>
-						Marketplace Petani
-					</Text>
-					<Text
-						className="text-[12px] mt-1"
-						style={{ color: "#94A3B8", fontFamily: "Montserrat-Medium" }}
-					>
-						Beli produk langsung dari petani terverifikasi
+						Marketplace
 					</Text>
 				</View>
 

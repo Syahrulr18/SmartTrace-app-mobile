@@ -4,7 +4,8 @@ import {
 	Text,
 	TextInput,
 	TouchableOpacity,
-	View
+	View,
+	Image
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchIcon from "../../components/icons/SearchIcon";
@@ -89,13 +90,46 @@ const ConsumerTracingScreen = () => {
 				className="flex-1 bg-[#F5F6F9]"
 				contentContainerClassName="pb-20"
 			>
+				<View>
+					<View className="bg-white px-6 pt-4 pb-4 flex-row items-center justify-between w-full">
+							  <View>
+								<Image
+								  source={require("../../assets/logo-smarttrace/logo-dashbord.png")}
+								  style={{ width: 130, height: 46, resizeMode: "contain" }}
+								/>
+							  </View>
+					
+							  <View className="flex-row items-center gap-2">
+								<View className="items-end">
+								  <Text
+									className="text-[13px]"
+									style={{ color: "#0E1B2A", fontFamily: "Montserrat-Bold" }}
+								  >
+									Nama Pembeli
+								  </Text>
+								  <Text
+									className="text-[11px]"
+									style={{ color: "#94A3B8", fontFamily: "Montserrat-Medium" }}
+								  >
+									Konsumen
+								  </Text>
+								</View>
+								<View className="w-10 h-10 rounded-full items-center justify-center">
+								  <Image
+									source={require("../../assets/icon-role/logo-konsumen.png")}
+									style={{ width: 40, height: 40, resizeMode: "contain" }}
+								  />
+								</View>
+							  </View>
+							</View>
+				</View>
 				{/* Header */}
-				<View className="bg-white px-6 pt-4 pb-4 flex-row items-center justify-between">
+				<View className="bg-[F5F6F9] px-6 pt-4 pb-1 flex-row items-center justify-between">
 					<Text
-						className="text-[14px] text-[#0E1B2A]"
+						className="text-[16px] text-[#0E1B2A]"
 						style={{ fontFamily: "Montserrat-Bold" }}
 					>
-						Riwayat Pelacakan
+						Riwayat Scan
 					</Text>
 					<View style={{ width: 40 }} />
 				</View>

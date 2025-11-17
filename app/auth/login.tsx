@@ -128,11 +128,11 @@ export default function LoginScreen() {
 					<PrimaryButton
 						title={isLoading ? "" : "Masuk"}
 						// onPress={handleLogin}
-						onPress={() => router.replace("../petani/home" as any)}
-						// onPress={() => router.replace("../konsumen/qr-scan" as any)}
-						// onPress={() => router.replace("../distributor/home" as any)}
-						disabled={isLoading}
+						// onPress={() => router.replace("../petani/home" as any)}
+						onPress={() => router.replace("../konsumen/qr-scan" as any)}
+						// onPress={() => router.replace("../distributor/home" as any)}						disabled={isLoading}
 					/>
+
 					{isLoading && (
 						<View className="absolute top-5 left-0 right-0 items-center">
 							<ActivityIndicator color="#ffffff" size="small" />
