@@ -36,8 +36,8 @@ export default function LoginScreen() {
 
 		try {
 			await login(email, password);
-			// Navigate to role selection
-			router.replace("/auth/select-role" as any);
+			// Navigate to role selection after login berhasil
+			router.replace("./select-role" as any);
 		} catch (err) {
 			setError("Login gagal. Silakan coba lagi.");
 		}
@@ -124,23 +124,19 @@ export default function LoginScreen() {
 					</TouchableOpacity>
 				</View>
 
-				<View className="mt-8">
-					<PrimaryButton
-						title={isLoading ? "" : "Masuk"}
-						// onPress={handleLogin}
-						// onPress={() => router.replace("../petani/home" as any)}
-						onPress={() => router.replace("../konsumen/qr-scan" as any)}
-						// onPress={() => router.replace("../distributor/home" as any)}						disabled={isLoading}
-					/>
+			<View className="mt-8">
+				<PrimaryButton
+					title={isLoading ? "" : "Masuk"}
+					onPress={handleLogin}
+					disabled={isLoading}
+				/>
 
-					{isLoading && (
-						<View className="absolute top-5 left-0 right-0 items-center">
-							<ActivityIndicator color="#ffffff" size="small" />
-						</View>
-					)}
-				</View>
-
-				
+				{isLoading && (
+					<View className="absolute top-5 left-0 right-0 items-center">
+						<ActivityIndicator color="#ffffff" size="small" />
+					</View>
+				)}
+			</View>				
 
 				<View className="items-center mt-auto">
 					<Text

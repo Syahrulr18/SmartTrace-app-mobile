@@ -52,6 +52,24 @@ function RootLayoutNavigation() {
 								headerShown: false,
 							}}
 						/>
+						<Stack.Screen
+							name="product-detail"
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen
+							name="petani-detail"
+							options={{
+								headerShown: false,
+							}}
+						/>
+						<Stack.Screen
+							name="common"
+							options={{
+								headerShown: false,
+							}}
+						/>
 					</>
 				)}
 			</Stack>

@@ -1,12 +1,12 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
-	Alert,
-	Image,
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
+  Alert,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddProductModal from "../../components/AddProductModal";
@@ -47,6 +47,10 @@ export default function FarmerHomeScreen() {
     date: "",
     price: "",
     condition: "Baik",
+    image: null as string | null,
+    location: "",
+    latitude: null as number | null,
+    longitude: null as number | null,
   });
 
   const handleAddProduct = () => {
@@ -79,6 +83,10 @@ export default function FarmerHomeScreen() {
       date: "",
       price: "",
       condition: "Baik",
+      image: null,
+      location: "",
+      latitude: null,
+      longitude: null,
     });
 
     Alert.alert(

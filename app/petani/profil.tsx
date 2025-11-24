@@ -39,12 +39,17 @@ const menuItems = [
 function MenuItem({
   label,
   icon,
+  onPress,
 }: {
   label: string;
   icon: ImageSourcePropType;
+  onPress?: () => void;
 }) {
   return (
-    <TouchableOpacity className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mb-3 shadow-xl">
+    <TouchableOpacity
+      onPress={onPress}
+      className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mb-3 shadow-xl"
+    >
       <View className="flex-row items-center gap-3">
         <Image
           source={icon}
@@ -153,7 +158,28 @@ export default function FarmerProfileScreen() {
 
           <View className="px-6">
             {menuItems.map((item) => (
-              <MenuItem key={item.id} label={item.label} icon={item.icon} />
+              <MenuItem
+                key={item.id}
+                label={item.label}
+                icon={item.icon}
+                onPress={() => {
+					if (item.label === "Profil Saya") {
+						router.push({
+							pathname: "/common/profile-edit",
+							params: { role: "petani" },
+						});
+					} else if (item.label === "Notifikasi") {
+						router.push({
+							pathname: "/common/notifications",
+							params: { role: "petani" },
+						});
+					} else if (item.label === "FAQ") {
+						router.push("/common/faq");
+					} else if (item.label === "Tentang Aplikasi") {
+						router.push("/common/about");
+					}
+                }}
+              />
             ))}
 
             <TouchableOpacity

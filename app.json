@@ -39,6 +39,21 @@
             "backgroundColor": "#000000"
           }
         }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Izinkan SmartTrace mengakses kamera untuk pemindaian QR",
+          "microphonePermission": "Izinkan SmartTrace mengakses mikrofon (opsional)",
+          "recordAudioAndroid": false
+        }
+      ],
+      [
+        "expo-maps",
+        {
+          "requestLocationPermission": true,
+          "locationPermission": "Allow $(PRODUCT_NAME) to use your location"
+        }
       ]
     ],
     "experiments": {

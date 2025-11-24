@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
   Image,
   ScrollView,
@@ -7,11 +8,14 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { WebView } from "react-native-webview";
+import DistributorAudit from "../../components/DistributorAudit";
 import AlertWarningIcon from "../../components/icons/AlertWarningIcon";
 import CheckIcon from "../../components/icons/CheckIcon";
 import CloseIcon from "../../components/icons/CloseIcon";
 import LocationPinIcon from "../../components/icons/LocationPinIcon";
 import ThermometerIcon from "../../components/icons/ThermometerIcon";
+import ManageFleet from "../../components/ManageFleet";
 import { shadows } from "../../design/shadows";
 import { colors, radius } from "../../design/theme";
 
@@ -37,7 +41,15 @@ interface Shipment {
 }
 
 const DistributorHomeScreen = () => {
+  const router = useRouter();
   const [selectedShipment, setSelectedShipment] = useState<string | null>(null);
+  const [selectedAuditId, setSelectedAuditId] = useState<string | null>(null);
+  const [auditModalVisible, setAuditModalVisible] = useState(false);
+
+  const handleAuditPress = (id: string) => {
+    setSelectedAuditId(id);
+    setAuditModalVisible(true);
+  };
 
   // Mock data
   const criticalAlerts: CriticalAlert[] = [
@@ -72,6 +84,36 @@ const DistributorHomeScreen = () => {
       date: "Kota Malang",
     },
   ];
+
+  // Active Fleets Data
+  const activeFleets = [
+    { id: "F001", name: "Truck A - B 1234 CD", lat: -6.2088, lng: 106.8456, status: "Mengirim ke Jakarta" },
+    { id: "F002", name: "Truck B - D 5678 EF", lat: -6.9175, lng: 107.6191, status: "Mengirim ke Bandung" },
+    { id: "F003", name: "Truck C - L 9012 GH", lat: -7.2575, lng: 112.7521, status: "Mengirim ke Surabaya" },
+  ];
+
+  // Map Script
+  const mapScript = `
+    var map = L.map('map');
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+
+    var fleets = ${JSON.stringify(activeFleets)};
+    var bounds = L.latLngBounds();
+
+    fleets.forEach(function(f) {
+        var latlng = [f.lat, f.lng];
+        L.marker(latlng).addTo(map)
+            .bindPopup("<b>" + f.name + "</b><br>" + f.status);
+        bounds.extend(latlng);
+    });
+
+    if (bounds.isValid()) {
+        map.fitBounds(bounds, {padding: [50, 50]});
+    }
+  `.replace(/\n/g, " ").replace(/\s\s+/g, " ");
 
   return (
     <SafeAreaView className="flex-1" style={{ backgroundColor: "transparent" }}>
@@ -175,28 +217,22 @@ const DistributorHomeScreen = () => {
               Monitoring Real-time
             </Text>
             <View
-              className="rounded-2xl p-6 items-center justify-center border border-[#E4E7EC]"
-              style={{ backgroundColor: "#F5F6F9", minHeight: 120 }}
+              className="rounded-2xl overflow-hidden border border-[#E4E7EC]"
+              style={{ backgroundColor: "#F5F6F9", height: 200 }}
             >
-              <View className="mb-2">
-                <LocationPinIcon size={32} color="#94A3B8" />
-              </View>
-              <Text
-                className="text-[12px] text-[#94A3B8] text-center"
-                style={{ fontFamily: "Montserrat-Medium" }}
-              >
-                Peta Interaktif GPS
-              </Text>
-              <Text
-                className="text-[10px] text-[#C5CACE] text-center mt-1"
-                style={{ fontFamily: "Montserrat-Medium" }}
-              >
-                Menampilkan lokasi semua armada secara real-time
-              </Text>
+              <WebView
+                originWhitelist={['*']}
+                source={{
+                  html: `<!DOCTYPE html><html><head><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><style>body{margin:0}#map{width:100%;height:100vh}</style></head><body><div id="map"></div><script>${mapScript}</script></body></html>`
+                }}
+                style={{ flex: 1 }}
+                scrollEnabled={false}
+              />
             </View>
           </View>
         </View>
 
+        <ManageFleet />
 
         <View className="px-6 mt-6">
           <View
@@ -266,7 +302,7 @@ const DistributorHomeScreen = () => {
                               className={`text-[10px] text-[#f59e0b]`}
                               style={{ fontFamily: "Montserrat-SemiBold" }}
                             >
-							  Peringatan
+                              Peringatan
                             </Text>
                           </>
                         ) : (
@@ -358,100 +394,6 @@ const DistributorHomeScreen = () => {
               className="text-[15px] text-[#0E1B2A] mb-4"
               style={{ fontFamily: "Montserrat-Bold" }}
             >
-              Metrik Performa
-            </Text>
-
-            <View className="gap-3">
-              <View
-                className="flex-row items-center justify-between rounded-2xl p-4 border border-[#E4E7EC]"
-                style={{ backgroundColor: "#EFF6FF" }}
-              >
-                <Text
-                  className="text-[12px] text-[#0369A1]"
-                  style={{ fontFamily: "Montserrat-Medium" }}
-                >
-                  FLW Prevention
-                </Text>
-                <Text
-                  className="text-[16px] text-[#0369A1]"
-                  style={{ fontFamily: "Montserrat-Bold" }}
-                >
-                  92%
-                </Text>
-              </View>
-
-              <View
-                className="flex-row items-center justify-between rounded-2xl p-4 border border-[#E4E7EC]"
-                style={{ backgroundColor: "#F0F9FF" }}
-              >
-                <Text
-                  className="text-[12px] text-[#0C4A6E]"
-                  style={{ fontFamily: "Montserrat-Medium" }}
-                >
-                  Total Pengiriman
-                </Text>
-                <Text
-                  className="text-[16px] text-[#0C4A6E]"
-                  style={{ fontFamily: "Montserrat-Bold" }}
-                >
-                  156
-                </Text>
-              </View>
-
-              <View
-                className="flex-row items-center justify-between rounded-2xl p-4 border border-[#E4E7EC]"
-                style={{ backgroundColor: "#EFF6FF" }}
-              >
-                <Text
-                  className="text-[12px] text-[#0369A1]"
-                  style={{ fontFamily: "Montserrat-Medium" }}
-                >
-                  Armada Aktif
-                </Text>
-                <Text
-                  className="text-[16px] text-[#0369A1]"
-                  style={{ fontFamily: "Montserrat-Bold" }}
-                >
-                  12 Unit
-                </Text>
-              </View>
-
-              <View
-                className="flex-row items-center justify-between rounded-2xl p-4 border border-[#E4E7EC]"
-                style={{ backgroundColor: "#F0F9FF" }}
-              >
-                <Text
-                  className="text-[12px] text-[#0C4A6E]"
-                  style={{ fontFamily: "Montserrat-Medium" }}
-                >
-                  Rata-rata Quality Score
-                </Text>
-                <Text
-                  className="text-[16px] text-[#0C4A6E]"
-                  style={{ fontFamily: "Montserrat-Bold" }}
-                >
-                  94%
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View className="px-6 mt-6">
-          <View
-            style={[
-              shadows.soft,
-              {
-                backgroundColor: colors.surface,
-                borderRadius: radius.l,
-              },
-            ]}
-            className="rounded-2xl px-5 py-5"
-          >
-            <Text
-              className="text-[15px] text-[#0E1B2A] mb-4"
-              style={{ fontFamily: "Montserrat-Bold" }}
-            >
               Riwayat & Audit Blockchain
             </Text>
 
@@ -474,6 +416,7 @@ const DistributorHomeScreen = () => {
               ].map((audit) => (
                 <TouchableOpacity
                   key={audit.id}
+                  onPress={() => handleAuditPress(audit.id)}
                   className="bg-white rounded-2xl p-4 border border-[#E2E8F0]"
                 >
                   <View className="flex-row items-start justify-between">
@@ -538,6 +481,12 @@ const DistributorHomeScreen = () => {
           </View>
         </View>
       </ScrollView>
+
+      <DistributorAudit
+        visible={auditModalVisible}
+        onClose={() => setAuditModalVisible(false)}
+        auditId={selectedAuditId}
+      />
     </SafeAreaView>
   );
 };

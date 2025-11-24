@@ -1,40 +1,87 @@
 # SmartTrace Mobile App
 
-SmartTrace adalah aplikasi seluler komprehensif untuk keterlacakan rantai pasokan makanan (food supply chain traceability), yang dilengkapi dengan integrasi blockchain dan pemantauan kualitas berbasis AI.
+SmartTrace adalah aplikasi seluler komprehensif untuk keterlacakan rantai pasokan makanan (*food supply chain traceability*), yang dirancang untuk menciptakan transparansi, keamanan, dan efisiensi dari petani hingga konsumen. Aplikasi ini mengintegrasikan teknologi modern seperti pemetaan digital (Maps) dan QR Code untuk memantau perjalanan produk secara *real-time*.
 
-Aplikasi ini dirancang untuk mendemonstrasikan platform yang transparan, aman, dan efisien bagi semua pemangku kepentingan dalam rantai pasokan.
+## 🚀 Status Pengembangan & Fitur
 
-## Fitur Utama
+Berikut adalah laporan progres pengembangan fitur aplikasi SmartTrace yang telah diselesaikan:
 
-Aplikasi ini memiliki tiga peran pengguna yang berbeda dengan fungsionalitas lengkap untuk masing-masing peran.
+### 🔐 Autentikasi & Profil
+- [x] **Login & Register:** Alur autentikasi lengkap untuk semua pengguna.
+- [x] **Manajemen Profil:** Halaman profil yang dapat diedit untuk setiap role (Petani, Konsumen, Distributor).
+- [x] **Informasi Umum:** Halaman Bantuan (FAQ), Tentang Aplikasi, dan Notifikasi.
 
-### Peran Petani / Nelayan
+### 🌾 Role Petani / Nelayan
+- [x] **Dashboard:** Halaman utama khusus Petani/Nelayan.
+- [x] **Manajemen Produk:** Halaman daftar produk dan detail produk.
+- [x] **Input Produk:** Fitur tambah produk baru lengkap dengan upload gambar.
 
-* **Dasbor Utama:** Menampilkan skor kualitas produk.
-* **Pencatatan Produk:** Formulir untuk mencatat produk baru dengan fitur penguncian data (locking) ke blockchain.
-* **Riwayat Transaksi:** Riwayat lengkap transaksi dengan metrik kinerja untuk analisis.
+### 🚚 Role Distributor / Logistik
+- [x] **Dashboard:** Halaman utama khusus Distributor.
+- [x] **Tracking System:** Halaman pelacakan status pengiriman.
+- [x] **Manajemen Pengiriman:** Fitur tambah pengiriman dengan pemilihan rute via Maps dan generate QR Code Induk.
+- [x] **Detail Pengiriman:** Tampilan informasi detail pengiriman.
+- [x] **Manajemen Armada:** Antarmuka untuk mengelola armada transportasi.
+- [x] **Marketplace:** Halaman pasar digital untuk distributor.
+- [x] **Pembayaran:** Antarmuka checkout dan pembayaran.
 
-### Peran Distributor / Logistik
+### 👤 Role Konsumen
+- [x] **Dashboard:** Halaman utama khusus Konsumen.
+- [x] **Scan QR Code:** Fitur pemindai QR Code untuk melacak asal-usul produk.
+- [x] **Traceability:** Tampilan detail perjalanan produk dari hulu ke hilir.
 
-* **Peringatan Kritis (AI):** Notifikasi berbasis AI untuk pengiriman berisiko tinggi.
-* **Pelacakan GPS Real-Time:** Tampilan peta interaktif untuk melacak lokasi pengiriman secara langsung.
-* **Pemantauan Kualitas:** Memantau status kualitas dengan grafik suhu (didukung oleh Recharts).
-* **Log Audit Blockchain:** Catatan audit di blockchain untuk resolusi sengketa dan transparansi.
+### 🛠️ Integrasi Teknologi
+- [x] **API Maps:** Visualisasi lokasi dan rute distribusi.
+- [x] **QR Code System:** Generator QR Code (untuk Distributor dan Petani) dan Scanner (untuk Konsumen).
 
-### Peran Konsumen
+---
 
-* **Pemindaian QR Code:** Fungsionalitas untuk memindai QR code pada kemasan produk.
-* **Pelacakan Produk Detail:** Menampilkan informasi produk terperinci, termasuk skor kualitas dan transparansi harga yang wajar (*fair price*).
-* **Garis Waktu Perjalanan:** Visualisasi lengkap perjalanan produk dengan data suhu dan lokasi.
-* **Verifikasi Blockchain:** Jaminan keaslian dan data yang tidak dapat diubah melalui verifikasi blockchain.
+## 📱 Detail Fitur per Role
 
-## Teknologi & Sorotan
+### 1. Petani / Nelayan (Hijau)
+Fokus pada pencatatan awal rantai pasok.
+*   **Pencatatan Hasil Panen:** Input data komoditas, tanggal panen, dan lokasi lahan.
+*   **Transparansi Kualitas:** Menampilkan skor kualitas awal produk.
+*   **Manajemen Stok:** Memantau produk yang siap dijual ke distributor.
 
-* **Integrasi Blockchain:** Memastikan data yang tidak dapat diubah (*immutable*) dan transparan untuk pencatatan produk dan verifikasi oleh konsumen.
-* **Pemantauan Berbasis AI:** Menggunakan AI untuk memberikan peringatan kritis dan memantau kualitas pengiriman.
-* **Visualisasi Data:** Menggunakan **Recharts** untuk menampilkan grafik dan metrik kinerja yang dinamis dan mudah dipahami.
-* **UI/UX Berbasis Peran:** Desain antarmuka yang bersih, modern, dan sepenuhnya responsif di perangkat seluler.
-* **Skema Warna Khusus:** UI memiliki skema warna yang berbeda untuk setiap peran guna meningkatkan pengalaman pengguna:
-    * **Petani:** Hijau
-    * **Distributor:** Biru
-    * **Konsumen:** Ungu
+### 2. Distributor / Logistik (Biru)
+Fokus pada rantai distribusi dan logistik.
+*   **Perencanaan Rute:** Memilih titik awal dan tujuan menggunakan peta interaktif.
+*   **QR Code Aggregation:** Membuat "Master QR" untuk satu batch pengiriman yang membawahi banyak unit produk.
+*   **Monitoring Armada:** Mengelola kendaraan dan status pengiriman aktif.
+*   **Marketplace B2B:** Membeli komoditas langsung dari petani terverifikasi.
+
+### 3. Konsumen (Ungu)
+Fokus pada verifikasi dan informasi produk.
+*   **Scan & Trace:** Memindai QR Code pada kemasan untuk melihat cerita lengkap produk.
+*   **Informasi Detail:** Mengetahui siapa petani, kapan dipanen, dan rute perjalanan produk.
+*   **Jaminan Keaslian:** Memastikan produk yang dibeli asli dan aman dikonsumsi.
+
+---
+
+## 💻 Teknologi yang Digunakan
+
+*   **Framework:** React Native (Expo)
+*   **Bahasa:** TypeScript
+*   **Styling:** NativeWind (Tailwind CSS)
+*   **Navigasi:** Expo Router
+*   **Peta:** Expo Maps / Google Maps API
+*   **Kamera:** Expo Camera (untuk QR Scan)
+*   **Komponen UI:** Custom Components dengan desain modern dan responsif.
+
+---
+
+## 📦 Cara Menjalankan Aplikasi
+
+1.  **Install Dependencies:**
+    ```bash
+    npm install
+    ```
+
+2.  **Jalankan Aplikasi:**
+    ```bash
+    npx expo start
+    ```
+
+3.  **Scan di Perangkat:**
+    Gunakan aplikasi **Expo Go** di Android/iOS untuk memindai QR code yang muncul di terminal.

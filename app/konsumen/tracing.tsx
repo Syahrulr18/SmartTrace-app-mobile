@@ -1,14 +1,16 @@
 import React from "react";
 import {
+	Image,
 	ScrollView,
 	Text,
 	TextInput,
 	TouchableOpacity,
-	View,
-	Image
+	View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchIcon from "../../components/icons/SearchIcon";
+import { demoProducts } from "./data/demo-products";
+import { useRouter } from "expo-router";
 
 interface TracedProduct {
   id: string;
@@ -18,49 +20,58 @@ interface TracedProduct {
   price: string;
   date: string;
   location: string;
+  image: any;
 }
 
 const ConsumerTracingScreen = () => {
+	const router = useRouter();
 	const [searchQuery, setSearchQuery] = React.useState("");
 	const [activeFilter, setActiveFilter] = React.useState<"all" | "high" | "attention">("all");
 
+	const formatIDDate = (iso: string) =>
+		new Date(iso).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+
 	const tracedProducts: TracedProduct[] = [
-		{
-			id: "A001",
-			name: "Ikan Kembung",
-			quality: 98,
-			source: "Toko Segar Jakarta",
-			price: "Rp 45.000/kg",
-			date: "12/11/2024",
-			location: "Pasar Modern Bandung",
-		},
-		{
-			id: "A002",
-			name: "Kangkung",
-			quality: 95,
-			source: "Pasar Modern Bandung",
-			price: "Rp 8.000/ikat",
-			date: "13/11/2024",
-			location: "Supermarket Jakarta",
-		},
-		{
-			id: "A004",
-			name: "Bayam",
-			quality: 94,
-			source: "Pasar Organik Jakarta",
-			price: "Rp 12.000/ikat",
-			date: "12/11/2024",
-			location: "Pasar Organik Jakarta",
-		},
-		{
-			id: "A003",
-			name: "Tomat",
-			quality: 75,
-			source: "Supermarket Jakarta",
-			price: "Rp 15.000/kg",
-			date: "10/11/2024",
-			location: "Supermarket Jakarta",
-		},
+    {
+            id: "A001",
+            name: "Ikan Kembung",
+            quality: 98,
+            source: "Toko Segar Jakarta",
+            price: "Rp 45.000/kg",
+            date: "2024-11-12",
+            location: "Pasar Modern Bandung",
+            image: demoProducts[0].image,
+        },
+    {
+            id: "A002",
+            name: "Kangkung",
+            quality: 95,
+            source: "Pasar Modern Bandung",
+            price: "Rp 8.000/ikat",
+            date: "2024-11-13",
+            location: "Supermarket Jakarta",
+            image: demoProducts[1].image,
+        },
+    {
+            id: "A004",
+            name: "Bayam",
+            quality: 94,
+            source: "Pasar Organik Jakarta",
+            price: "Rp 12.000/ikat",
+            date: "2024-11-12",
+            location: "Pasar Organik Jakarta",
+            image: demoProducts[3].image,
+        },
+    {
+            id: "A003",
+            name: "Tomat",
+            quality: 75,
+            source: "Supermarket Jakarta",
+            price: "Rp 15.000/kg",
+            date: "2024-11-10",
+            location: "Supermarket Jakarta",
+            image: require("../../assets/produk-images/Tomat.jpeg"),
+        },
 	];
 
 	const filteredProducts = tracedProducts
@@ -135,8 +146,8 @@ const ConsumerTracingScreen = () => {
 				</View>
 
 			{/* Search Bar */}
-			<View className="px-6 pt-4 pb-2">
-				<View className="bg-white rounded-full px-4 py-3 flex-row items-center border border-[#E4E7EC]">
+			<View className="px-6 pt-4 pb-1">
+				<View className="bg-white rounded-full px-4 py-0.4 flex-row items-center border border-[#E4E7EC]">
 					<SearchIcon color="#9B9898" width={14} height={14} />
 					<TextInput
 						placeholder="Cari produk atau ID..."
@@ -166,15 +177,15 @@ const ConsumerTracingScreen = () => {
 						>
 							<Text
 								className="text-center text-[9px]"
-								style={{
-									color: activeFilter === tab.key ? "#B45309" : "#94A3B8",
-									fontFamily: activeFilter === tab.key
-										? "Montserrat-SemiBold"
-										: "Montserrat-Medium",
-								}}
-							>
-								{tab.label}
-							</Text>
+                            style={{
+                                color: activeFilter === tab.key ? "#B45309" : "#94A3B8",
+                                fontFamily: activeFilter === tab.key
+                                    ? "Montserrat-SemiBold"
+                                    : "Montserrat-Medium",
+                            }}
+						>
+							{tab.label}
+						</Text>
 						</TouchableOpacity>
 					))}
 				</View>
@@ -184,15 +195,32 @@ const ConsumerTracingScreen = () => {
 			<View className="px-5 mt-6 gap-6">
 				{filteredProducts.length > 0 ? (
 					filteredProducts.map((product) => (
-						<View key={product.id}>
+						<TouchableOpacity
+							key={product.id}
+							onPress={() =>
+								router.push({
+									pathname: "/product-detail",
+									params: { productId: product.id },
+								})
+							}
+						>
 							<Text
 								className="text-[11px] text-[#94A3B8]"
 								style={{ fontFamily: "Montserrat-Medium" }}
 							>
-								{product.date}
+								{formatIDDate(product.date)}
 							</Text>
 
 							<View className="bg-white rounded-2xl mt-2 p-4 border border-[#E2E8F0] gap-2">
+								<Image
+									source={product.image}
+									style={{
+										width: "100%",
+										height: 120,
+										borderRadius: 12,
+										resizeMode: "cover",
+									}}
+								/>
 								<View className="flex-row items-center justify-between">
 									<View>
 										<Text
@@ -207,8 +235,8 @@ const ConsumerTracingScreen = () => {
 											product.quality >= 90
 												? "bg-[#DBEAFE]"
 												: product.quality >= 80
-													? "bg-[#FEF3C7]"
-													: "bg-[#FEE2E2]"
+												? "bg-[#FEF3C7]"
+												: "bg-[#FEE2E2]"
 										}`}
 									>
 										<Text
@@ -216,8 +244,8 @@ const ConsumerTracingScreen = () => {
 												product.quality >= 90
 													? "text-[#0369A1]"
 													: product.quality >= 80
-														? "text-[#B45309]"
-														: "text-[#991B1B]"
+													? "text-[#B45309]"
+													: "text-[#991B1B]"
 											}`}
 											style={{ fontFamily: "Montserrat-Bold" }}
 										>
@@ -290,7 +318,7 @@ const ConsumerTracingScreen = () => {
 									</View>
 								</View>
 							</View>
-						</View>
+						</TouchableOpacity>
 					))
 				) : (
 					<View className="bg-white rounded-2xl p-8 items-center justify-center">

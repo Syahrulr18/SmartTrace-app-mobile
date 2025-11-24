@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { useRouter } from "expo-router";
+import { useState } from "react";
 import {
 	Alert,
 	Image,
@@ -11,9 +12,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddProductModal from "../../components/AddProductModal";
 import BlockchainConfirmationModal from "../../components/BlockchainConfirmationModal";
-import StatusBadge from "../../components/StatusBadge";
+import AlertWarningIcon from "../../components/icons/AlertWarningIcon";
+import CheckIcon from "../../components/icons/CheckIcon";
+import LocationPinIcon from "../../components/icons/LocationPinIcon";
 import PlusIcon from "../../components/icons/PlusIcon";
 import SearchIcon from "../../components/icons/SearchIcon";
+import ThermometerIcon from "../../components/icons/ThermometerIcon";
+import ProductCard from "../../components/ProductCard";
 
 type ProductStatus = "available" | "shipping" | "sold";
 
@@ -30,10 +35,11 @@ const productHistory = [
 		date: "13 Nov 2025",
 		name: "Ikan Cakalang",
 		status: "available" as ProductStatus,
+		quality: 98,
 		attributes: [
 			{ label: "Jenis", value: "Hasil Laut" },
 			{ label: "Jumlah", value: "50 kg" },
-			{ label: "Harga per Satuan", value: "10.000" },
+			{ label: "Harga per Satuan", value: "Rp 10.000/kg" },
 			{ label: "Lokasi", value: "TPI Paotere Makassar" },
 		],
 	},
@@ -42,10 +48,14 @@ const productHistory = [
 		date: "12 Nov 2025",
 		name: "Cumi",
 		status: "shipping" as ProductStatus,
+		quality: 85, // Temporary quality
+		route: "Makassar → Surabaya",
+		currentLocation: "Laut Jawa",
+		temperature: 4,
 		attributes: [
 			{ label: "Jenis", value: "Hasil Laut" },
 			{ label: "Jumlah", value: "25 kg" },
-			{ label: "Harga per Satuan", value: "25.000" },
+			{ label: "Harga per Satuan", value: "Rp 25.000/kg" },
 			{ label: "Lokasi", value: "TPI Paotere Makassar" },
 		],
 	},
@@ -54,25 +64,24 @@ const productHistory = [
 		date: "12 Nov 2025",
 		name: "Udang Kecil",
 		status: "sold" as ProductStatus,
+		quality: 95, // Final quality
+		tracingId: "TRC-UDG-001",
 		attributes: [
 			{ label: "Jenis", value: "Hasil Laut" },
 			{ label: "Jumlah", value: "25 kg" },
-			{ label: "Harga per Satuan", value: "25.000" },
+			{ label: "Harga per Satuan", value: "Rp 25.000/kg" },
 			{ label: "Lokasi", value: "TPI Paotere Makassar" },
 		],
 	},
 ];
 
-const STATUS_LABEL: Record<ProductStatus, string> = {
-	available: "Tersedia",
-	shipping: "Dalam Pengiriman",
-	sold: "Terjual",
-};
-
 export default function FarmerProductsScreen() {
+	const router = useRouter();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showBlockchainConfirm, setShowBlockchainConfirm] = useState(false);
-	const [activeFilter, setActiveFilter] = useState<"all" | "available" | "shipping" | "sold">("all");
+	const [activeFilter, setActiveFilter] = useState<
+		"all" | "available" | "shipping" | "sold"
+	>("all");
 	const [searchQuery, setSearchQuery] = useState("");
 	const [formData, setFormData] = useState({
 		commodity: "",
@@ -80,18 +89,78 @@ export default function FarmerProductsScreen() {
 		date: "",
 		price: "",
 		condition: "Baik",
+        image: null as string | null,
+        location: "",
+        latitude: null as number | null,
+        longitude: null as number | null,
 	});
 	const [products, setProducts] = useState(productHistory);
 
 	const commodities = [
 		"Pilih komoditas",
+		// Ikan Laut
 		"Ikan Kembung",
 		"Ikan Cakalang",
-		"Cumi",
+		"Ikan Tuna",
+		"Ikan Tongkol",
+		"Ikan Tenggiri",
+		"Ikan Kakap Merah",
+		"Ikan Kakap Putih",
+		"Ikan Baronang",
+		"Ikan Kuwe",
+		"Ikan Kerapu",
+		"Ikan Salmon",
+		"Ikan Bandeng",
+		// Seafood Lainnya
+		"Cumi-Cumi",
+		"Gurita",
+		"Udang Windu",
+		"Udang Vaname",
+		"Udang Galah",
 		"Udang Kecil",
 		"Udang Besar",
+		"Kepiting",
+		"Rajungan",
 		"Tiram",
-		"Kerang",
+		"Kerang Hijau",
+		"Kerang Darah",
+		"Lobster",
+		"Sotong",
+		// Sayuran Hijau
+		"Bayam",
+		"Kangkung",
+		"Sawi Hijau",
+		"Sawi Putih",
+		"Kailan",
+		"Pakcoy",
+		"Selada",
+		"Brokoli",
+		"Kembang Kol",
+		// Sayuran Umbi & Akar
+		"Wortel",
+		"Kentang",
+		"Ubi Jalar",
+		"Lobak",
+		"Bit",
+		"Singkong",
+		// Sayuran Buah
+		"Tomat",
+		"Terong",
+		"Cabai Merah",
+		"Cabai Rawit",
+		"Paprika",
+		"Timun",
+		"Labu Siam",
+		"Pare",
+		"Oyong",
+		// Sayuran Lainnya
+		"Bawang Merah",
+		"Bawang Putih",
+		"Bawang Bombay",
+		"Jahe",
+		"Kunyit",
+		"Kencur",
+		"Lengkuas",
 	];
 
 	const conditions = ["Baik", "Cukup", "Kurang"];
@@ -118,8 +187,14 @@ export default function FarmerProductsScreen() {
 	};
 
 	const handleConfirmBlockchain = () => {
+		// Generate unique product ID
+		const productId = `STRACE-${Date.now()}`;
+		
+		// Generate QR code URL using QuickChart API
+		const qrCodeUrl = `https://quickchart.io/qr?text=${encodeURIComponent(productId)}&size=300`;
+		
 		const newProduct = {
-			id: Date.now().toString(),
+			id: productId,
 			date: new Date().toLocaleDateString("id-ID", {
 				day: "2-digit",
 				month: "short",
@@ -127,11 +202,15 @@ export default function FarmerProductsScreen() {
 			}),
 			name: formData.commodity,
 			status: "available" as ProductStatus,
+			quality: 100, // Default new product quality
+            latitude: formData.latitude || -5.1477, // Default to Makassar if null
+            longitude: formData.longitude || 119.4327,
+			qrCodeUrl: qrCodeUrl, // Add QR code URL
 			attributes: [
 				{ label: "Jenis", value: "Hasil Laut" },
 				{ label: "Jumlah", value: `${formData.weight} kg` },
-				{ label: "Harga per Satuan", value: formData.price },
-				{ label: "Lokasi", value: "TPI Paotere Makassar" },
+				{ label: "Harga per Satuan", value: `Rp ${formData.price}/kg` },
+				{ label: "Lokasi", value: formData.location || "TPI Paotere Makassar" },
 				{ label: "Kondisi", value: formData.condition },
 			],
 		};
@@ -145,11 +224,16 @@ export default function FarmerProductsScreen() {
 			date: "",
 			price: "",
 			condition: "Baik",
+            image: null,
+            location: "",
+            latitude: null,
+            longitude: null,
 		});
 
 		Alert.alert(
-			"Berhasil",
-			"Produk Anda telah berhasil dicatat dan dikunci di blockchain"
+			"Berhasil Dicatat!",
+			`Produk "${formData.commodity}" telah berhasil dicatat dan dikunci di blockchain.\n\nID Produk: ${productId}\n\nQR Code telah dibuat dan siap untuk di-scan.`,
+			[{ text: "OK", style: "default" }]
 		);
 	};
 
@@ -173,6 +257,88 @@ export default function FarmerProductsScreen() {
 	};
 
 	const filteredProducts = getFilteredProducts();
+
+	const renderProductItem = (product: any) => {
+		return (
+			<TouchableOpacity
+				key={product.id}
+				onPress={() =>
+					router.push({
+						pathname: "/petani-detail",
+						params: { productId: product.id }
+					} as any)
+				}
+				activeOpacity={0.8}
+			>
+				<View className="relative">
+					<ProductCard product={product} />
+					
+					{/* Additional Info Row based on Status */}
+					{product.status === "available" && (
+						<View className="mx-4 mb-4 mt-[-10px] bg-[#F0FDF4] rounded-b-xl border-x border-b border-[#E2E8F0] p-3 flex-row items-center justify-between">
+							<View className="flex-row items-center gap-2">
+								<CheckIcon size={14} color="#15803D" />
+								<Text className="text-[11px] text-[#15803D]" style={{ fontFamily: "Montserrat-SemiBold" }}>
+									Siap Dijual
+								</Text>
+							</View>
+							<Text className="text-[11px] text-[#15803D]" style={{ fontFamily: "Montserrat-Bold" }}>
+								Mutu: {product.quality}%
+							</Text>
+						</View>
+					)}
+
+
+				{product.status === "shipping" && (
+					<View className="mx-4 mb-4 mt-[-10px] bg-[#F0F9FF] rounded-b-xl border-x border-b border-[#E2E8F0] p-3">
+						<View className="flex-row items-center justify-between mb-2">
+							<View className="flex-row items-center gap-2">
+								<LocationPinIcon size={14} color="#0369A1" />
+								<Text className="text-[11px] text-[#0369A1]" style={{ fontFamily: "Montserrat-SemiBold" }}>
+									Sedang Dikirim
+								</Text>
+							</View>
+							<Text className="text-[11px] text-[#0369A1]" style={{ fontFamily: "Montserrat-Bold" }}>
+								{product.currentLocation}
+							</Text>
+						</View>
+						<View className="flex-row items-center justify-between border-t border-[#BAE6FD] pt-2">
+							<View className="flex-row items-center gap-1">
+								<ThermometerIcon size={12} color="#0369A1" />
+								<Text className="text-[10px] text-[#0369A1]" style={{ fontFamily: "Montserrat-Medium" }}>
+									{product.temperature}°C
+								</Text>
+							</View>
+							<View className="flex-row items-center gap-1">
+								<AlertWarningIcon size={12} color="#B45309" />
+								<Text className="text-[10px] text-[#B45309]" style={{ fontFamily: "Montserrat-Medium" }}>
+									Mutu: {product.quality}%
+								</Text>
+							</View>
+						</View>
+					</View>
+				)}
+                
+                {product.status === "sold" && (
+						<View className="mx-4 mb-4 mt-[-10px] bg-[#F8FAFC] rounded-b-xl border-x border-b border-[#E2E8F0] p-3 flex-row items-center justify-between">
+							<View>
+								<Text className="text-[10px] text-[#64748B]" style={{ fontFamily: "Montserrat-Medium" }}>ID Tracing</Text>
+								<Text className="text-[11px] text-[#0F172A]" style={{ fontFamily: "Montserrat-Bold" }}>
+									{product.tracingId}
+								</Text>
+							</View>
+							<View className="bg-[#F0FDF4] px-2 py-1 rounded-full border border-[#10b981]">
+								<Text className="text-[10px] text-[#15803D]" style={{ fontFamily: "Montserrat-Bold" }}>
+									Terjual
+								</Text>
+							</View>
+						</View>
+					)}
+				</View>
+			</TouchableOpacity>
+		);
+	};
+
 	return (
 		<SafeAreaView className="flex-1" style={{ backgroundColor: "transparent" }}>
 			<ScrollView
@@ -215,7 +381,7 @@ export default function FarmerProductsScreen() {
 
 				<View className="px-5 pt-4">
 					<View className="flex-row items-center gap-3">
-						<View className="flex-1 flex-row items-center bg-white rounded-full px-3 py-1 border border-[#E4E7EC] gap-2">
+						<View className="flex-1 flex-row items-center bg-white rounded-full px-3 py-0.4 border border-[#E4E7EC] gap-2">
 							<SearchIcon />
 							<TextInput
 								placeholder="Cari produk Anda"
@@ -253,9 +419,10 @@ export default function FarmerProductsScreen() {
 									className="text-center text-[9px]"
 									style={{
 										color: activeFilter === tab.value ? "#0F2B46" : "#94A3B8",
-										fontFamily: activeFilter === tab.value
-											? "Montserrat-SemiBold"
-											: "Montserrat-Medium",
+										fontFamily:
+											activeFilter === tab.value
+												? "Montserrat-SemiBold"
+												: "Montserrat-Medium",
 									}}
 								>
 									{tab.label}
@@ -267,66 +434,7 @@ export default function FarmerProductsScreen() {
 
 				<View className="px-5 mt-6 gap-6">
 					{filteredProducts.length > 0 ? (
-						filteredProducts.map((product) => (
-							<View key={product.id}>
-								<Text
-									className="text-[11px] text-[#94A3B8]"
-									style={{ fontFamily: "Montserrat-Medium" }}
-								>
-									{product.date}
-								</Text>
-
-								<View className="bg-white rounded-2xl mt-2 p-4 border border-[#E2E8F0] gap-2">
-								<View className="flex-row items-center justify-between">
-									<View>
-										<Text
-											className="text-[14px] text-[#0E1B2A]"
-											style={{ fontFamily: "Montserrat-SemiBold" }}
-										>
-											{product.name}
-										</Text>
-									</View>
-									<StatusBadge
-										label={STATUS_LABEL[product.status]}
-										variant={product.status}
-									/>
-								</View>
-
-								<View className="gap-3">
-									{product.attributes.map((attribute) => (
-										<View
-											key={attribute.label}
-											className="flex-row justify-between border-b border-dashed border-[#E2E8F0] pb-2"
-										>
-											<Text
-												className="text-[11px] text-[#94A3B8]"
-												style={{ fontFamily: "Montserrat-Medium" }}
-											>
-												{attribute.label}
-											</Text>
-											{attribute.label === "Lokasi" ? (
-												<TouchableOpacity>
-													<Text
-														className="text-[9px] text-[#1D4ED8] underline"
-														style={{ fontFamily: "Montserrat-SemiBold" }}
-													>
-														{attribute.value}
-													</Text>
-												</TouchableOpacity>
-											) : (
-												<Text
-													className="text-[11px] text-[#0F172A]"
-													style={{ fontFamily: "Montserrat-SemiBold" }}
-												>
-													{attribute.value}
-												</Text>
-											)}
-										</View>
-									))}
-								</View>
-							</View>
-						</View>
-					))
+						filteredProducts.map((product) => renderProductItem(product))
 					) : (
 						<View className="bg-white rounded-2xl p-8 items-center justify-center">
 							<Text
@@ -338,25 +446,25 @@ export default function FarmerProductsScreen() {
 						</View>
 					)}
 				</View>
-		</ScrollView>
+			</ScrollView>
 
-		{/* Add Product Modal Component */}
-		<AddProductModal
-			visible={isModalOpen}
-			onClose={() => setIsModalOpen(false)}
-			onSubmit={handleAddProduct}
-			formData={formData}
-			setFormData={setFormData}
-			commodities={commodities}
-			conditions={conditions}
-		/>
+			{/* Add Product Modal Component */}
+			<AddProductModal
+				visible={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				onSubmit={handleAddProduct}
+				formData={formData}
+				setFormData={setFormData}
+				commodities={commodities}
+				conditions={conditions}
+			/>
 
-		{/* Blockchain Confirmation Modal Component */}
-		<BlockchainConfirmationModal
-			visible={showBlockchainConfirm}
-			onClose={() => setShowBlockchainConfirm(false)}
-			onConfirm={handleConfirmBlockchain}
-		/>
-	</SafeAreaView>
+			{/* Blockchain Confirmation Modal Component */}
+			<BlockchainConfirmationModal
+				visible={showBlockchainConfirm}
+				onClose={() => setShowBlockchainConfirm(false)}
+				onConfirm={handleConfirmBlockchain}
+			/>
+		</SafeAreaView>
 	);
 }

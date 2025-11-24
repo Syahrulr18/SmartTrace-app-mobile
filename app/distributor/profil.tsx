@@ -65,12 +65,17 @@ const DistributorProfileScreen = () => {
 	function MenuItem({
 		label,
 		icon,
+		onPress,
 	}: {
 		label: string;
 		icon: ImageSourcePropType;
+		onPress?: () => void;
 	}) {
 		return (
-			<TouchableOpacity className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mb-3 shadow-xl">
+			<TouchableOpacity
+				onPress={onPress}
+				className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mb-3 shadow-xl"
+			>
 				<View className="flex-row items-center gap-3">
 					<Image
 						source={icon}
@@ -102,7 +107,7 @@ const DistributorProfileScreen = () => {
 				showsVerticalScrollIndicator={false}
 			>
 				<LinearGradient
-					colors={["#0369A1", "#06B6D4"]}
+					colors={["#0C2C47", "#97D3CD"]}
 					start={{ x: 0, y: 0 }}
 					end={{ x: 1, y: 1 }}
 					className="px-6 pt-5 pb-20 rounded-b-[32px]"
@@ -153,7 +158,28 @@ const DistributorProfileScreen = () => {
 
 					<View className="px-6">
 						{menuItems.map((item) => (
-							<MenuItem key={item.id} label={item.label} icon={item.icon} />
+							<MenuItem
+								key={item.id}
+								label={item.label}
+								icon={item.icon}
+								onPress={() => {
+									if (item.label === "Profil Saya") {
+										router.push({
+											pathname: "/common/profile-edit",
+											params: { role: "distributor" },
+										});
+									} else if (item.label === "Notifikasi") {
+										router.push({
+											pathname: "/common/notifications",
+											params: { role: "distributor" },
+										});
+									} else if (item.label === "FAQ") {
+										router.push("/common/faq");
+									} else if (item.label === "Tentang Aplikasi") {
+										router.push("/common/about");
+									}
+								}}
+							/>
 						))}
 
 						<TouchableOpacity

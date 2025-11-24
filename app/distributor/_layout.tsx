@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import React from "react";
 import { View } from "react-native";
 import DistributorTabIcon from "../../components/icons/DistributorTabIcon";
 
@@ -11,7 +10,7 @@ type TabConfig = {
 const TABS: TabConfig[] = [
 	{ name: "home", label: "Beranda" },
 	{ name: "marketplace", label: "Marketplace" },
-	{ name: "tracking", label: "Tracking" },
+	{ name: "tracking", label: "Tracing" },
 	{ name: "profil", label: "Profil" },
 ];
 
