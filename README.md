@@ -51,7 +51,7 @@ Fokus pada rantai distribusi dan logistik.
 *   **Monitoring Armada:** Mengelola kendaraan dan status pengiriman aktif.
 *   **Marketplace B2B:** Membeli komoditas langsung dari petani terverifikasi.
 
-### 3. Konsumen (Ungu)
+### 3. Konsumen (Kuning)
 Fokus pada verifikasi dan informasi produk.
 *   **Scan & Trace:** Memindai QR Code pada kemasan untuk melihat cerita lengkap produk.
 *   **Informasi Detail:** Mengetahui siapa petani, kapan dipanen, dan rute perjalanan produk.
