@@ -37,7 +37,7 @@ Konsumen memegang kendali atas informasi produk yang mereka beli.
 *   **Bahasa:** TypeScript
 *   **Styling:** NativeWind (Tailwind CSS)
 *   **Navigasi:** Expo Router
-*   **Peta:** leaflet api API
+*   **Peta:** leaflet API
 *   **Kamera:** Expo Camera (untuk QR Scan)
 *   **Komponen UI:** Custom Components dengan desain modern dan responsif.
 
