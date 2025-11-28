@@ -32,6 +32,7 @@ Konsumen memegang kendali atas informasi produk yang mereka beli.
 
 ## 💻 Teknologi yang Digunakan
 
+### Frontend
 *   **Framework:** React Native (Expo)
 *   **Bahasa:** TypeScript
 *   **Styling:** NativeWind (Tailwind CSS)
