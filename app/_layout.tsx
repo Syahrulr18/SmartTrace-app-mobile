@@ -6,6 +6,8 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { AuthProvider, useAuth } from "../context/AuthContext";
+import { FleetProvider } from "../context/FleetContext";
+import { ProductProvider } from "../context/ProductContext";
 import "./global.css";
 
 function RootLayoutNavigation() {
@@ -106,7 +108,11 @@ export default function RootLayout() {
 
 	return (
 		<AuthProvider>
-			<RootLayoutNavigation />
+			<ProductProvider>
+				<FleetProvider>
+					<RootLayoutNavigation />
+				</FleetProvider>
+			</ProductProvider>
 		</AuthProvider>
 	);
 }

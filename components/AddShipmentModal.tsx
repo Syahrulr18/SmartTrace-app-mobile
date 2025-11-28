@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { useFleet } from "../context/FleetContext";
 import { shadows } from "../design/shadows";
 import ArrowDownIcon from "./icons/ArrowDownIcon";
 import CheckIcon from "./icons/CheckIcon";
@@ -23,7 +24,7 @@ interface AddShipmentModalProps {
 
 // Mock purchased products
 const PURCHASED_PRODUCTS = [
-  { id: "PROD-001", name: "Ikan Kembung Segar", supplier: "Nelayan Bima", qty: "50 kg" },
+  { id: "PROD-001", name: "Ikan Cakalang", supplier: "Budi Santoso", qty: "50 kg" },
   { id: "PROD-002", name: "Udang Vaname", supplier: "Tambak Sejahtera", qty: "100 kg" },
   { id: "PROD-003", name: "Cumi-Cumi", supplier: "Nelayan Bajo", qty: "30 kg" },
 ];
@@ -32,8 +33,10 @@ export default function AddShipmentModal({
   visible,
   onClose,
 }: AddShipmentModalProps) {
+  const { drivers } = useFleet();
   const [step, setStep] = useState(1); // 1: Details, 2: QR Generation
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
+  const [selectedDriver, setSelectedDriver] = useState<string | null>(null);
   const [startLocation, setStartLocation] = useState("");
   const [endLocation, setEndLocation] = useState("");
   const [childQrQty, setChildQrQty] = useState("");
@@ -44,7 +47,7 @@ export default function AddShipmentModal({
   const [pickerMode, setPickerMode] = useState<'start' | 'end'>('start');
 
   const handleNext = () => {
-    if (step === 1 && selectedProduct && startLocation && endLocation) {
+    if (step === 1 && selectedProduct && selectedDriver && startLocation && endLocation) {
       setStep(2);
     } else if (step === 2) {
       // Submit logic here
@@ -52,6 +55,7 @@ export default function AddShipmentModal({
       // Reset state
       setStep(1);
       setSelectedProduct(null);
+      setSelectedDriver(null);
       setStartLocation("");
       setEndLocation("");
       setChildQrQty("");
@@ -82,7 +86,7 @@ export default function AddShipmentModal({
   const renderStep1 = () => (
     <View className="gap-4">
       {/* Product Selection */}
-      <View>
+      <View className="">
         <Text className="text-[12px] text-[#0E1B2A] mb-2" style={{ fontFamily: "Montserrat-Bold" }}>
           Pilih Produk
         </Text>
@@ -115,8 +119,77 @@ export default function AddShipmentModal({
         </View>
       </View>
 
-      {/* Route Input */}
+      {/* Driver Selection */}
       <View>
+        <Text className="text-[12px] text-[#0E1B2A] mb-2" style={{ fontFamily: "Montserrat-Bold" }}>
+          Pilih Supir
+        </Text>
+        <View className="gap-2">
+          {drivers.map((driver) => (
+            <TouchableOpacity
+              key={driver.id}
+              onPress={() => setSelectedDriver(driver.id)}
+              className={`flex-row items-center gap-3 px-4 py-3 rounded-xl border ${
+                selectedDriver === driver.id
+                  ? "bg-[#EFF6FF] border-[#0369A1]"
+                  : "bg-white border-[#E2E8F0]"
+              }`}
+            >
+              <View
+                className={`w-5 h-5 rounded-full border-2 ${
+                  selectedDriver === driver.id
+                    ? "bg-[#0369A1] border-[#0369A1]"
+                    : "border-[#CBD5E1]"
+                }`}
+              >
+                {selectedDriver === driver.id && (
+                  <View className="w-full h-full items-center justify-center">
+                    <CheckIcon size={12} color="white" />
+                  </View>
+                )}
+              </View>
+              <View className="flex-1">
+                <Text
+                  className={`text-[12px] ${
+                    selectedDriver === driver.id ? "text-[#0369A1]" : "text-[#0E1B2A]"
+                  }`}
+                  style={{ fontFamily: "Montserrat-SemiBold" }}
+                >
+                  {driver.name}
+                </Text>
+                <Text className="text-[10px] text-[#64748B]" style={{ fontFamily: "Montserrat-Medium" }}>
+                  {driver.phone}
+                </Text>
+              </View>
+              <View
+                className={`px-2.5 py-1 rounded-lg ${
+                  driver.status === "Aktif"
+                    ? "bg-[#DCFCE7]"
+                    : driver.status === "Maintenance"
+                    ? "bg-[#FEF3C7]"
+                    : "bg-[#FEE2E2]"
+                }`}
+              >
+                <Text
+                  className={`text-[9px] font-semibold ${
+                    driver.status === "Aktif"
+                      ? "text-[#166534]"
+                      : driver.status === "Maintenance"
+                      ? "text-[#92400E]"
+                      : "text-[#991B1B]"
+                  }`}
+                  style={{ fontFamily: "Montserrat-Bold" }}
+                >
+                  {driver.status}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
+
+      {/* Route Input */}
+      <View className="pb-10">
         <Text className="text-[12px] text-[#0E1B2A] mb-2" style={{ fontFamily: "Montserrat-Bold" }}>
           Rute Pengiriman
         </Text>
@@ -299,15 +372,15 @@ export default function AddShipmentModal({
           <View className="p-6 bg-white border-t border-[#E2E8F0]">
             <TouchableOpacity
               onPress={handleNext}
-              disabled={step === 1 && (!selectedProduct || !startLocation || !endLocation)}
+              disabled={step === 1 && (!selectedProduct || !selectedDriver || !startLocation || !endLocation)}
               className={`w-full py-3.5 rounded-xl items-center ${
-                (step === 1 && (!selectedProduct || !startLocation || !endLocation))
+                (step === 1 && (!selectedProduct || !selectedDriver || !startLocation || !endLocation))
                   ? "bg-[#E2E8F0]"
                   : "bg-[#0E1B2A]"
               }`}
             >
               <Text className={`text-[14px] ${
-                 (step === 1 && (!selectedProduct || !startLocation || !endLocation))
+                 (step === 1 && (!selectedProduct || !selectedDriver || !startLocation || !endLocation))
                  ? "text-[#94A3B8]"
                  : "text-white"
               }`} style={{ fontFamily: "Montserrat-Bold" }}>

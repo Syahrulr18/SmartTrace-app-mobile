@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ContactSupportIcon from "../../components/icons/ContactSupportIcon";
 import { useAuth } from "../../context/AuthContext";
 
 const menuItems = [
@@ -34,15 +35,22 @@ const menuItems = [
     label: "Tentang Aplikasi",
     icon: require("../../assets/icon-on-profil/about-icon.png"),
   },
+  {
+    id: "contact",
+    label: "Hubungi Kami",
+    SvgIcon: ContactSupportIcon,
+  },
 ];
 
 function MenuItem({
   label,
   icon,
+  SvgIcon,
   onPress,
 }: {
   label: string;
-  icon: ImageSourcePropType;
+  icon?: ImageSourcePropType;
+  SvgIcon?: React.ElementType;
   onPress?: () => void;
 }) {
   return (
@@ -51,10 +59,14 @@ function MenuItem({
       className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mb-3 shadow-xl"
     >
       <View className="flex-row items-center gap-3">
-        <Image
-          source={icon}
-          style={{ width: 20, height: 30, resizeMode: "contain" }}
-        />
+        {SvgIcon ? (
+          <SvgIcon width={20} height={30} />
+        ) : (
+          <Image
+            source={icon!}
+            style={{ width: 20, height: 30, resizeMode: "contain" }}
+          />
+        )}
         <Text
           className="text-[12px] text-[#0E1B2A] ml-3"
           style={{ fontFamily: "Montserrat-SemiBold" }}
@@ -162,6 +174,7 @@ export default function FarmerProfileScreen() {
                 key={item.id}
                 label={item.label}
                 icon={item.icon}
+                SvgIcon={item.SvgIcon}
                 onPress={() => {
 					if (item.label === "Profil Saya") {
 						router.push({
@@ -177,6 +190,8 @@ export default function FarmerProfileScreen() {
 						router.push("/common/faq");
 					} else if (item.label === "Tentang Aplikasi") {
 						router.push("/common/about");
+					} else if (item.label === "Hubungi Kami") {
+						router.push("/common/contact-us");
 					}
                 }}
               />

@@ -6,25 +6,15 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { useFleet } from "../context/FleetContext";
 import { shadows } from "../design/shadows";
 import { colors, radius } from "../design/theme";
 import CloseIcon from "./icons/CloseIcon";
 import PlusIcon from "./icons/PlusIcon";
 import TruckIcon from "./icons/TruckIcon";
 
-interface Fleet {
-  id: string;
-  name: string;
-  driverName: string;
-  driverPhone: string;
-  status: "Aktif" | "Maintenance" | "Idle";
-}
-
 const ManageFleet = () => {
-  const [fleets, setFleets] = useState<Fleet[]>([
-    { id: "1", name: "Truck A - B 1234 CD", driverName: "Budi Santoso", driverPhone: "08123456789", status: "Aktif" },
-    { id: "2", name: "Truck B - B 5678 EF", driverName: "Asep Sunandar", driverPhone: "08198765432", status: "Idle" },
-  ]);
+  const { fleets, addFleet, deleteFleet } = useFleet();
   const [newFleetName, setNewFleetName] = useState("");
   const [newDriverName, setNewDriverName] = useState("");
   const [newDriverPhone, setNewDriverPhone] = useState("");
@@ -32,14 +22,15 @@ const ManageFleet = () => {
 
   const handleAddFleet = () => {
     if (newFleetName.trim() && newDriverName.trim() && newDriverPhone.trim()) {
-      const newFleet: Fleet = {
+      const newFleet = {
         id: Date.now().toString(),
         name: newFleetName,
         driverName: newDriverName,
         driverPhone: newDriverPhone,
-        status: "Idle",
+        driverId: "driver-" + Date.now(),
+        status: "Idle" as const,
       };
-      setFleets([...fleets, newFleet]);
+      addFleet(newFleet);
       setNewFleetName("");
       setNewDriverName("");
       setNewDriverPhone("");
@@ -48,7 +39,7 @@ const ManageFleet = () => {
   };
 
   const handleDeleteFleet = (id: string) => {
-    setFleets(fleets.filter((fleet) => fleet.id !== id));
+    deleteFleet(id);
   };
 
   return (

@@ -1,13 +1,13 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-	Alert,
-	Image,
-	ScrollView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
+    Alert,
+    Image,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddProductModal from "../../components/AddProductModal";
@@ -19,6 +19,7 @@ import PlusIcon from "../../components/icons/PlusIcon";
 import SearchIcon from "../../components/icons/SearchIcon";
 import ThermometerIcon from "../../components/icons/ThermometerIcon";
 import ProductCard from "../../components/ProductCard";
+import { useProducts } from "../../context/ProductContext";
 
 type ProductStatus = "available" | "shipping" | "sold";
 
@@ -29,54 +30,9 @@ const filterTabs = [
 	{ label: "Terjual", active: false },
 ];
 
-const productHistory = [
-	{
-		id: "cakalang",
-		date: "13 Nov 2025",
-		name: "Ikan Cakalang",
-		status: "available" as ProductStatus,
-		quality: 98,
-		attributes: [
-			{ label: "Jenis", value: "Hasil Laut" },
-			{ label: "Jumlah", value: "50 kg" },
-			{ label: "Harga per Satuan", value: "Rp 10.000/kg" },
-			{ label: "Lokasi", value: "TPI Paotere Makassar" },
-		],
-	},
-	{
-		id: "cumi",
-		date: "12 Nov 2025",
-		name: "Cumi",
-		status: "shipping" as ProductStatus,
-		quality: 85, // Temporary quality
-		route: "Makassar → Surabaya",
-		currentLocation: "Laut Jawa",
-		temperature: 4,
-		attributes: [
-			{ label: "Jenis", value: "Hasil Laut" },
-			{ label: "Jumlah", value: "25 kg" },
-			{ label: "Harga per Satuan", value: "Rp 25.000/kg" },
-			{ label: "Lokasi", value: "TPI Paotere Makassar" },
-		],
-	},
-	{
-		id: "udang",
-		date: "12 Nov 2025",
-		name: "Udang Kecil",
-		status: "sold" as ProductStatus,
-		quality: 95, // Final quality
-		tracingId: "TRC-UDG-001",
-		attributes: [
-			{ label: "Jenis", value: "Hasil Laut" },
-			{ label: "Jumlah", value: "25 kg" },
-			{ label: "Harga per Satuan", value: "Rp 25.000/kg" },
-			{ label: "Lokasi", value: "TPI Paotere Makassar" },
-		],
-	},
-];
-
 export default function FarmerProductsScreen() {
 	const router = useRouter();
+	const { products, addProduct } = useProducts();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showBlockchainConfirm, setShowBlockchainConfirm] = useState(false);
 	const [activeFilter, setActiveFilter] = useState<
@@ -89,78 +45,18 @@ export default function FarmerProductsScreen() {
 		date: "",
 		price: "",
 		condition: "Baik",
-        image: null as string | null,
-        location: "",
-        latitude: null as number | null,
-        longitude: null as number | null,
+		image: null as string | null,
 	});
-	const [products, setProducts] = useState(productHistory);
 
 	const commodities = [
 		"Pilih komoditas",
-		// Ikan Laut
 		"Ikan Kembung",
 		"Ikan Cakalang",
-		"Ikan Tuna",
-		"Ikan Tongkol",
-		"Ikan Tenggiri",
-		"Ikan Kakap Merah",
-		"Ikan Kakap Putih",
-		"Ikan Baronang",
-		"Ikan Kuwe",
-		"Ikan Kerapu",
-		"Ikan Salmon",
-		"Ikan Bandeng",
-		// Seafood Lainnya
-		"Cumi-Cumi",
-		"Gurita",
-		"Udang Windu",
-		"Udang Vaname",
-		"Udang Galah",
+		"Cumi",
 		"Udang Kecil",
 		"Udang Besar",
-		"Kepiting",
-		"Rajungan",
 		"Tiram",
-		"Kerang Hijau",
-		"Kerang Darah",
-		"Lobster",
-		"Sotong",
-		// Sayuran Hijau
-		"Bayam",
-		"Kangkung",
-		"Sawi Hijau",
-		"Sawi Putih",
-		"Kailan",
-		"Pakcoy",
-		"Selada",
-		"Brokoli",
-		"Kembang Kol",
-		// Sayuran Umbi & Akar
-		"Wortel",
-		"Kentang",
-		"Ubi Jalar",
-		"Lobak",
-		"Bit",
-		"Singkong",
-		// Sayuran Buah
-		"Tomat",
-		"Terong",
-		"Cabai Merah",
-		"Cabai Rawit",
-		"Paprika",
-		"Timun",
-		"Labu Siam",
-		"Pare",
-		"Oyong",
-		// Sayuran Lainnya
-		"Bawang Merah",
-		"Bawang Putih",
-		"Bawang Bombay",
-		"Jahe",
-		"Kunyit",
-		"Kencur",
-		"Lengkuas",
+		"Kerang",
 	];
 
 	const conditions = ["Baik", "Cukup", "Kurang"];
@@ -187,14 +83,8 @@ export default function FarmerProductsScreen() {
 	};
 
 	const handleConfirmBlockchain = () => {
-		// Generate unique product ID
-		const productId = `STRACE-${Date.now()}`;
-		
-		// Generate QR code URL using QuickChart API
-		const qrCodeUrl = `https://quickchart.io/qr?text=${encodeURIComponent(productId)}&size=300`;
-		
 		const newProduct = {
-			id: productId,
+			id: Date.now().toString(),
 			date: new Date().toLocaleDateString("id-ID", {
 				day: "2-digit",
 				month: "short",
@@ -203,19 +93,20 @@ export default function FarmerProductsScreen() {
 			name: formData.commodity,
 			status: "available" as ProductStatus,
 			quality: 100, // Default new product quality
-            latitude: formData.latitude || -5.1477, // Default to Makassar if null
-            longitude: formData.longitude || 119.4327,
-			qrCodeUrl: qrCodeUrl, // Add QR code URL
+			weight: `${formData.weight} kg`,
+			price: `Rp ${formData.price}/kg`,
+			quantity: parseInt(formData.weight) || 0,
+			image: formData.image || undefined,
 			attributes: [
 				{ label: "Jenis", value: "Hasil Laut" },
 				{ label: "Jumlah", value: `${formData.weight} kg` },
 				{ label: "Harga per Satuan", value: `Rp ${formData.price}/kg` },
-				{ label: "Lokasi", value: formData.location || "TPI Paotere Makassar" },
+				{ label: "Lokasi", value: "TPI Paotere Makassar" },
 				{ label: "Kondisi", value: formData.condition },
 			],
 		};
 
-		setProducts([newProduct, ...products]);
+		addProduct(newProduct);
 		setIsModalOpen(false);
 		setShowBlockchainConfirm(false);
 		setFormData({
@@ -224,16 +115,12 @@ export default function FarmerProductsScreen() {
 			date: "",
 			price: "",
 			condition: "Baik",
-            image: null,
-            location: "",
-            latitude: null,
-            longitude: null,
+			image: null,
 		});
 
 		Alert.alert(
-			"Berhasil Dicatat!",
-			`Produk "${formData.commodity}" telah berhasil dicatat dan dikunci di blockchain.\n\nID Produk: ${productId}\n\nQR Code telah dibuat dan siap untuk di-scan.`,
-			[{ text: "OK", style: "default" }]
+			"Berhasil",
+			"Produk Anda telah berhasil dicatat dan dikunci di blockchain"
 		);
 	};
 
@@ -318,22 +205,21 @@ export default function FarmerProductsScreen() {
 						</View>
 					</View>
 				)}
-                
-                {product.status === "sold" && (
-						<View className="mx-4 mb-4 mt-[-10px] bg-[#F8FAFC] rounded-b-xl border-x border-b border-[#E2E8F0] p-3 flex-row items-center justify-between">
-							<View>
-								<Text className="text-[10px] text-[#64748B]" style={{ fontFamily: "Montserrat-Medium" }}>ID Tracing</Text>
-								<Text className="text-[11px] text-[#0F172A]" style={{ fontFamily: "Montserrat-Bold" }}>
-									{product.tracingId}
-								</Text>
-							</View>
-							<View className="bg-[#F0FDF4] px-2 py-1 rounded-full border border-[#10b981]">
-								<Text className="text-[10px] text-[#15803D]" style={{ fontFamily: "Montserrat-Bold" }}>
-									Terjual
-								</Text>
-							</View>
+				{product.status === "sold" && (
+					<View className="mx-4 mb-4 mt-[-10px] bg-[#F8FAFC] rounded-b-xl border-x border-b border-[#E2E8F0] p-3 flex-row items-center justify-between">
+						<View>
+							<Text className="text-[10px] text-[#64748B]" style={{ fontFamily: "Montserrat-Medium" }}>ID Tracing</Text>
+							<Text className="text-[11px] text-[#0F172A]" style={{ fontFamily: "Montserrat-Bold" }}>
+								{product.tracingId}
+							</Text>
 						</View>
-					)}
+						<View className="bg-[#F0FDF4] px-2 py-1 rounded-full border border-[#10b981]">
+							<Text className="text-[10px] text-[#15803D]" style={{ fontFamily: "Montserrat-Bold" }}>
+								Terjual
+							</Text>
+						</View>
+					</View>
+				)}
 				</View>
 			</TouchableOpacity>
 		);

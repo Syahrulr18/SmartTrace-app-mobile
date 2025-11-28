@@ -1,4 +1,3 @@
-import React from "react";
 import { Image as RNImage, Text, TouchableOpacity, View } from "react-native";
 import StatusBadge from "./StatusBadge";
 
@@ -14,6 +13,7 @@ type Product = {
 	date: string;
 	name: string;
 	status: ProductStatus;
+	image?: string; // Uploaded product photo (URI)
 	attributes: ProductAttribute[];
 };
 
@@ -28,9 +28,13 @@ const STATUS_LABEL: Record<ProductStatus, string> = {
 };
 
 const getProductImage = (name: string) => {
-	if (name.toLowerCase().includes("kembung")) return require("../assets/produk-images/Ikan-kembung.jpeg");
-	if (name.toLowerCase().includes("tomat")) return require("../assets/produk-images/Tomat.jpeg");
-	if (name.toLowerCase().includes("bayam")) return require("../assets/produk-images/bayam.jpeg");
+	const lowerName = name.toLowerCase();
+	if (lowerName.includes("kembung")) return require("../assets/produk-images/Ikan-kembung.jpeg");
+	if (lowerName.includes("tomat")) return require("../assets/produk-images/Tomat.jpeg");
+	if (lowerName.includes("bayam")) return require("../assets/produk-images/bayam.jpeg");
+	if (lowerName.includes("cumi")) return require("../assets/produk-images/Cumi.jpg");
+	if (lowerName.includes("cakalang")) return require("../assets/produk-images/Ikan Cakalang.jpg");
+	if (lowerName.includes("udang")) return require("../assets/produk-images/udang Kecil (1).jpeg");
 	return require("../assets/produk-images/images.jpeg");
 };
 
@@ -46,7 +50,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
 			<View className="bg-white rounded-2xl mt-2 p-4 border border-[#E2E8F0] gap-2">
 				<RNImage
-					source={getProductImage(product.name)}
+					source={
+						product.image
+							? { uri: product.image }
+							: getProductImage(product.name)
+					}
 					style={{ width: "100%", height: 120, borderRadius: 12, resizeMode: "cover" }}
 				/>
 				<View className="flex-row items-center justify-between">

@@ -1,11 +1,11 @@
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
+    Image,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { WebView } from "react-native-webview";

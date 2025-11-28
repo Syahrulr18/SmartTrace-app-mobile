@@ -1,11 +1,11 @@
 import { useState } from "react";
 import {
-	Image,
-	ScrollView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
+    Image,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddShipmentModal from "../../components/AddShipmentModal";
@@ -13,6 +13,7 @@ import LocationPinIcon from "../../components/icons/LocationPinIcon";
 import PlusIcon from "../../components/icons/PlusIcon";
 import SearchIcon from "../../components/icons/SearchIcon";
 import TrackingDetailModal from "../../components/TrackingDetailModal";
+import { useFleet } from "../../context/FleetContext";
 
 interface TrackingData {
   id: string;
@@ -30,6 +31,7 @@ interface TrackingData {
 }
 
 const DistributorTrackingScreen = () => {
+	const { drivers } = useFleet();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedFilter, setSelectedFilter] = useState<"all" | "active" | "completed">("all");
     const [selectedShipment, setSelectedShipment] = useState<TrackingData | null>(null);
@@ -46,7 +48,7 @@ const DistributorTrackingScreen = () => {
 			location: "KM 120 Tol Surabaya-Jakarta",
 			startPoint: "Surabaya",
 			endPoint: "Jakarta",
-			driver: "Budi",
+			driver: drivers[0]?.name || "Budi",
 			vehicle: "Box FG-001",
 			lastUpdate: "5 menit lalu",
 		},
@@ -59,7 +61,7 @@ const DistributorTrackingScreen = () => {
 			location: "Kota Malang",
 			startPoint: "Malang",
 			endPoint: "Bandung",
-			driver: "Doni",
+			driver: drivers[1]?.name || "Doni",
 			vehicle: "Box FG-002",
 			lastUpdate: "10 menit lalu",
 		},
@@ -72,7 +74,7 @@ const DistributorTrackingScreen = () => {
 			location: "Bandara Soekarno-Hatta",
 			startPoint: "Jakarta",
 			endPoint: "Bogor",
-			driver: "Eko",
+			driver: drivers[2]?.name || "Eko",
 			vehicle: "Box FG-003",
 			lastUpdate: "30 menit lalu",
 		},

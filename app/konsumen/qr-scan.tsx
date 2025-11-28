@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -126,7 +126,7 @@ const ConsumerQRScanScreen = () => {
           <View className="flex-row items-center gap-2">
             <View className="items-end">
               <Text className="text-[13px]" style={{ color: "#0E1B2A", fontFamily: "Montserrat-Bold" }}>
-                Nama Pembeli
+                Muh Nabil Qastary
               </Text>
               <Text className="text-[11px]" style={{ color: "#94A3B8", fontFamily: "Montserrat-Medium" }}>
                 Konsumen

@@ -1,16 +1,16 @@
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-	Image,
-	ScrollView,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View
+    Image,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SearchIcon from "../../components/icons/SearchIcon";
 import { demoProducts } from "./data/demo-products";
-import { useRouter } from "expo-router";
 
 interface TracedProduct {
   id: string;
@@ -116,7 +116,7 @@ const ConsumerTracingScreen = () => {
 									className="text-[13px]"
 									style={{ color: "#0E1B2A", fontFamily: "Montserrat-Bold" }}
 								  >
-									Nama Pembeli
+									Muh Nabil Qastary
 								  </Text>
 								  <Text
 									className="text-[11px]"

@@ -1,30 +1,87 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import {
-  Alert,
-  Image,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
+    Alert,
+    Image,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddProductModal from "../../components/AddProductModal";
 import BlockchainConfirmationModal from "../../components/BlockchainConfirmationModal";
 import StatusBadge from "../../components/StatusBadge";
 import PlusIcon from "../../components/icons/PlusIcon";
+import { useProducts } from "../../context/ProductContext";
 import { shadows } from "../../design/shadows";
 import { colors, radius } from "../../design/theme";
 
 const commodities = [
-  "Pilih komoditas",
-  "Ikan Kembung",
-  "Ikan Cakalang",
-  "Cumi",
-  "Udang Kecil",
-  "Udang Besar",
-  "Tiram",
-  "Kerang",
+  	"Pilih komoditas",
+		// Ikan Laut
+		"Ikan Kembung",
+		"Ikan Cakalang",
+		"Ikan Tuna",
+		"Ikan Tongkol",
+		"Ikan Tenggiri",
+		"Ikan Kakap Merah",
+		"Ikan Kakap Putih",
+		"Ikan Baronang",
+		"Ikan Kuwe",
+		"Ikan Kerapu",
+		"Ikan Salmon",
+		"Ikan Bandeng",
+		// Seafood Lainnya
+		"Cumi-Cumi",
+		"Gurita",
+		"Udang Windu",
+		"Udang Vaname",
+		"Udang Galah",
+		"Udang Kecil",
+		"Udang Besar",
+		"Kepiting",
+		"Rajungan",
+		"Tiram",
+		"Kerang Hijau",
+		"Kerang Darah",
+		"Lobster",
+		"Sotong",
+		// Sayuran Hijau
+		"Bayam",
+		"Kangkung",
+		"Sawi Hijau",
+		"Sawi Putih",
+		"Kailan",
+		"Pakcoy",
+		"Selada",
+		"Brokoli",
+		"Kembang Kol",
+		// Sayuran Umbi & Akar
+		"Wortel",
+		"Kentang",
+		"Ubi Jalar",
+		"Lobak",
+		"Bit",
+		"Singkong",
+		// Sayuran Buah
+		"Tomat",
+		"Terong",
+		"Cabai Merah",
+		"Cabai Rawit",
+		"Paprika",
+		"Timun",
+		"Labu Siam",
+		"Pare",
+		"Oyong",
+		// Sayuran Lainnya
+		"Bawang Merah",
+		"Bawang Putih",
+		"Bawang Bombay",
+		"Jahe",
+		"Kunyit",
+		"Kencur",
+		"Lengkuas",
 ];
 
 const conditions = ["Baik", "Cukup", "Kurang"];
@@ -41,6 +98,7 @@ const todaysProducts = [
 export default function FarmerHomeScreen() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showBlockchainConfirm, setShowBlockchainConfirm] = useState(false);
+  const { products, addProduct, getMonthlyStats } = useProducts();
   const [formData, setFormData] = useState({
     commodity: "",
     weight: "",
@@ -75,6 +133,30 @@ export default function FarmerHomeScreen() {
   };
 
   const handleConfirmBlockchain = () => {
+    const newProduct = {
+      id: Date.now().toString(),
+      date: new Date().toLocaleDateString("id-ID", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }),
+      name: formData.commodity,
+      status: "available" as const,
+      quality: 100,
+      weight: `${formData.weight} kg`,
+      price: `Rp ${formData.price}/kg`,
+      quantity: parseInt(formData.weight) || 0,
+      image: formData.image || undefined,
+      attributes: [
+        { label: "Jenis", value: "Hasil Laut" },
+        { label: "Jumlah", value: `${formData.weight} kg` },
+        { label: "Harga per Satuan", value: `Rp ${formData.price}/kg` },
+        { label: "Lokasi", value: "TPI Paotere Makassar" },
+        { label: "Kondisi", value: formData.condition },
+      ],
+    };
+
+    addProduct(newProduct);
     setIsModalOpen(false);
     setShowBlockchainConfirm(false);
     setFormData({
@@ -154,7 +236,7 @@ export default function FarmerHomeScreen() {
                 className="text-white text-[40px] mt-1 "
                 style={{ fontFamily: "Montserrat-ExtraBold" }}
               >
-                95%
+                {getMonthlyStats().averageQuality}%
               </Text>
               <View className="flex-row items-center gap-2">
                 <StatusBadge label="High Quality" variant={"available"} />
@@ -182,7 +264,7 @@ export default function FarmerHomeScreen() {
                   className="text-[15px] text-[#0E1B2A]"
                   style={{ fontFamily: "Montserrat-Bold" }}
                 >
-                  Produk Saya Hari Ini
+                  Produk Saya Ini
                 </Text>
                 <Text
                   className="text-[12px] text-[#64748B] mt-1"
@@ -200,13 +282,19 @@ export default function FarmerHomeScreen() {
               </TouchableOpacity>
             </View>
 
-            {todaysProducts.map((product) => (
+            {products.length > 0 && products.map((product) => (
               <View
-                key={product.name}
-                className="bg-white rounded-2xl border border-[#E2E8F0] p-4"
+                key={product.id}
+                className="bg-white rounded-2xl border border-[#E2E8F0] p-4 pb-5 overflow-hidden"
               >
+                {product.image && (
+                  <Image
+                    source={{ uri: product.image }}
+                    style={{ width: "100%", height: 140, borderRadius: 12, marginBottom: 12 }}
+                  />
+                )}
                 <View className="flex-row items-center justify-between">
-                  <View>
+                  <View className="flex-1">
                     <Text
                       className="text-[16px] text-[#0E1B2A]"
                       style={{ fontFamily: "Montserrat-SemiBold" }}
@@ -217,7 +305,7 @@ export default function FarmerHomeScreen() {
                       className="text-[12px] text-[#64748B] mt-1"
                       style={{ fontFamily: "Montserrat-Medium" }}
                     >
-                      {product.detail}
+                      {product.weight}   {product.price}
                     </Text>
                   </View>
                   <StatusBadge label="Tersedia" variant={product.status} />
@@ -227,7 +315,7 @@ export default function FarmerHomeScreen() {
                   className="text-[12px] text-[#1D4ED8] mt-4"
                   style={{ fontFamily: "Montserrat-SemiBold" }}
                 >
-                  {product.location}
+                  TPI Paotere Makassar
                 </Text>
               </View>
             ))}
@@ -269,7 +357,7 @@ export default function FarmerHomeScreen() {
                     className="text-[22px] text-[#0E1B2A] mt-2"
                     style={{ fontFamily: "Montserrat-Bold" }}
                   >
-                    195 kg
+                    {getMonthlyStats().totalWeight} kg
                   </Text>
                 </View>
 
@@ -282,10 +370,10 @@ export default function FarmerHomeScreen() {
                     Pendapatan
                   </Text>
                   <Text
-                    className="text-[22px] text-[#0E1B2A] mt-2"
+                    className="text-[18px] text-[#0E1B2A] mt-2"
                     style={{ fontFamily: "Montserrat-Bold" }}
                   >
-                    Rp 7.2 jt
+                    Rp {(getMonthlyStats().totalRevenue / 1000000).toFixed(1)} jt
                   </Text>
                 </View>
               </View>
@@ -304,7 +392,7 @@ export default function FarmerHomeScreen() {
                     className="text-[22px] text-[#0E1B2A] mt-2"
                     style={{ fontFamily: "Montserrat-Bold" }}
                   >
-                    4
+                    {getMonthlyStats().transactionCount}
                   </Text>
                 </View>
 
@@ -320,7 +408,7 @@ export default function FarmerHomeScreen() {
                     className="text-[22px] text-[#10b981] mt-2"
                     style={{ fontFamily: "Montserrat-Bold" }}
                   >
-                    96%
+                    {getMonthlyStats().averageQuality}%
                   </Text>
                 </View>
               </View>

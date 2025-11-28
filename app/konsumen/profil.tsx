@@ -2,15 +2,16 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-    Alert,
-    Image,
-    ImageSourcePropType,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+	Alert,
+	Image,
+	ImageSourcePropType,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ContactSupportIcon from "../../components/icons/ContactSupportIcon";
 import { useAuth } from "../../context/AuthContext";
 
 const ConsumerProfileScreen = () => {
@@ -60,15 +61,22 @@ const ConsumerProfileScreen = () => {
 			label: "Tentang Aplikasi",
 			icon: require("../../assets/icon-on-profil/about-icon.png"),
 		},
+		{
+			id: "contact",
+			label: "Hubungi Kami",
+			SvgIcon: ContactSupportIcon,
+		},
 	];
 
 	function MenuItem({
 		label,
 		icon,
+		SvgIcon,
 		onPress,
 	}: {
 		label: string;
-		icon: ImageSourcePropType;
+		icon?: ImageSourcePropType;
+		SvgIcon?: React.ElementType;
 		onPress?: () => void;
 	}) {
 		return (
@@ -77,10 +85,14 @@ const ConsumerProfileScreen = () => {
 				className="flex-row items-center justify-between bg-white rounded-2xl px-4 py-4 mb-3 shadow-xl"
 			>
 				<View className="flex-row items-center gap-3">
-					<Image
-						source={icon}
-						style={{ width: 20, height: 30, resizeMode: "contain" }}
-					/>
+					{SvgIcon ? (
+						<SvgIcon width={20} height={30} />
+					) : (
+						<Image
+							source={icon!}
+							style={{ width: 20, height: 30, resizeMode: "contain" }}
+						/>
+					)}
 					<Text
 						className="text-[12px] text-[#0E1B2A] ml-3"
 						style={{ fontFamily: "Montserrat-SemiBold" }}
@@ -146,13 +158,13 @@ const ConsumerProfileScreen = () => {
 							className="text-black text-[20px] mt-4"
 							style={{ fontFamily: "Montserrat-Bold" }}
 						>
-							Nama Pembeli
+							Muh Nabil Qastary
 						</Text>
 						<Text
 							className="text-[#9B9898] text-[13px] mt-1 mb-6"
 							style={{ fontFamily: "Montserrat-Medium" }}
 						>
-							pembeli@email.com
+							nabil@email.com
 						</Text>
 					</View>
 
@@ -162,6 +174,7 @@ const ConsumerProfileScreen = () => {
 								key={item.id}
 								label={item.label}
 								icon={item.icon}
+								SvgIcon={item.SvgIcon}
 								onPress={() => {
 									if (item.label === "Profil Saya") {
 										router.push({
@@ -177,6 +190,8 @@ const ConsumerProfileScreen = () => {
 										router.push("/common/faq");
 									} else if (item.label === "Tentang Aplikasi") {
 										router.push("/common/about");
+									} else if (item.label === "Hubungi Kami") {
+										router.push("/common/contact-us");
 									}
 								}}
 							/>

@@ -1,4 +1,3 @@
-import React from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 interface FarmerProduct {

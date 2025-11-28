@@ -35,7 +35,7 @@ interface FarmerProduct {
 const farmerProducts: FarmerProduct[] = [
 	{
 		id: "prod-001",
-		farmerName: "Petani Laut Makassar",
+		farmerName: "Budi Santoso",
 		farmerId: "farmer-001",
 		productName: "Ikan Cakalang",
 		type: "Hasil Laut",
@@ -43,9 +43,9 @@ const farmerProducts: FarmerProduct[] = [
 		price: 10000,
 		location: "TPI Paotere Makassar",
 		quality: 98,
-		image: require("../../assets/produk-images/Ikan-kembung.jpeg"),
+		image: require("../../assets/produk-images/Ikan Cakalang.jpg"),
 		available: true,
-		bankAccount: "BCA 1234567890 a.n Petani Laut Makassar",
+		bankAccount: "BCA 1234567890 a.n Budi Santoso",
 	},
 	{
 		id: "prod-002",
