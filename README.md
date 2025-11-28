@@ -2,60 +2,31 @@
 
 SmartTrace adalah aplikasi seluler komprehensif untuk keterlacakan rantai pasokan makanan (*food supply chain traceability*), yang dirancang untuk menciptakan transparansi, keamanan, dan efisiensi dari petani hingga konsumen. Aplikasi ini mengintegrasikan teknologi modern seperti pemetaan digital (Maps) dan QR Code untuk memantau perjalanan produk secara *real-time*.
 
-## 🚀 Status Pengembangan & Fitur
+## � Arsitektur Sistem & Alur Kerja
 
-Berikut adalah laporan progres pengembangan fitur aplikasi SmartTrace yang telah diselesaikan:
+Sistem SmartTrace dirancang untuk menciptakan rantai kepercayaan digital dari hulu ke hilir. Berikut adalah alur kerja lengkap sistem:
 
-### 🔐 Autentikasi & Profil
-- [x] **Login & Register:** Alur autentikasi lengkap untuk semua pengguna.
-- [x] **Manajemen Profil:** Halaman profil yang dapat diedit untuk setiap role (Petani, Konsumen, Distributor).
-- [x] **Informasi Umum:** Halaman Bantuan (FAQ), Tentang Aplikasi, dan Notifikasi.
+### 1. Produsen (Petani/Nelayan) - *The Origin*
+Segala sesuatu dimulai dari Produsen.
+*   **Pencatatan Lot Stok:** Produsen mencatat hasil panen dengan detail (jenis, berat, harga yang adil).
+*   **Blockchain ID Cryptonesse:** Saat data disimpan, sistem mengunci data ini dan menghasilkan **Blockchain ID Cryptonesse**. Ini adalah bukti digital *immutable* (tidak dapat diubah) atas kualitas dan harga awal, melindungi produsen dari manipulasi harga.
 
-### 🌾 Role Petani / Nelayan
-- [x] **Dashboard:** Halaman utama khusus Petani/Nelayan.
-- [x] **Manajemen Produk:** Halaman daftar produk dan detail produk.
-- [x] **Input Produk:** Fitur tambah produk baru lengkap dengan upload gambar.
+### 2. Distributor - *The Bridge*
+Distributor menghubungkan produk berkualitas ke pasar.
+*   **Marketplace & Pembelian:** Distributor membeli Lot Stok yang terverifikasi langsung dari Produsen.
+*   **Pembuatan Shipment:** Dalam proses pengiriman, Distributor menentukan produk, asal/tujuan, dan rute.
+*   **QR Satuan:** Sistem menghasilkan **QR Satuan** yang dicetak dan ditempel pada setiap kemasan retail. Ini adalah kunci pelacakan unit per item.
+*   **Real-time Tracking & IoT:** Selama perjalanan, Distributor memantau lokasi truk secara *real-time*.
+*   **AI Critical Alerts:** Sensor IoT memantau kondisi lingkungan (suhu/kelembaban). Jika terjadi anomali (misal: AC truk mati), **AI SmartTrace** langsung mengirim notifikasi **Alert Kritis**. Distributor dapat segera bertindak untuk mencegah kerusakan produk (potensi kerugian besar).
 
-### 🚚 Role Distributor / Logistik
-- [x] **Dashboard:** Halaman utama khusus Distributor.
-- [x] **Tracking System:** Halaman pelacakan status pengiriman.
-- [x] **Manajemen Pengiriman:** Fitur tambah pengiriman dengan pemilihan rute via Maps dan generate QR Code Induk.
-- [x] **Detail Pengiriman:** Tampilan informasi detail pengiriman.
-- [x] **Manajemen Armada:** Antarmuka untuk mengelola armada transportasi.
-- [x] **Marketplace:** Halaman pasar digital untuk distributor.
-- [x] **Pembayaran:** Antarmuka checkout dan pembayaran.
-
-### 👤 Role Konsumen
-- [x] **Dashboard:** Halaman utama khusus Konsumen.
-- [x] **Scan QR Code:** Fitur pemindai QR Code untuk melacak asal-usul produk.
-- [x] **Traceability:** Tampilan detail perjalanan produk dari hulu ke hilir.
-
-### 🛠️ Integrasi Teknologi
-- [x] **API Maps:** Visualisasi lokasi dan rute distribusi.
-- [x] **QR Code System:** Generator QR Code (untuk Distributor dan Petani) dan Scanner (untuk Konsumen).
-
----
-
-## 📱 Detail Fitur per Role
-
-### 1. Petani / Nelayan (Hijau)
-Fokus pada pencatatan awal rantai pasok.
-*   **Pencatatan Hasil Panen:** Input data komoditas, tanggal panen, dan lokasi lahan.
-*   **Transparansi Kualitas:** Menampilkan skor kualitas awal produk.
-*   **Manajemen Stok:** Memantau produk yang siap dijual ke distributor.
-
-### 2. Distributor / Logistik (Biru)
-Fokus pada rantai distribusi dan logistik.
-*   **Perencanaan Rute:** Memilih titik awal dan tujuan menggunakan peta interaktif.
-*   **QR Code Aggregation:** Membuat "Master QR" untuk satu batch pengiriman yang membawahi banyak unit produk.
-*   **Monitoring Armada:** Mengelola kendaraan dan status pengiriman aktif.
-*   **Marketplace B2B:** Membeli komoditas langsung dari petani terverifikasi.
-
-### 3. Konsumen (Kuning)
-Fokus pada verifikasi dan informasi produk.
-*   **Scan & Trace:** Memindai QR Code pada kemasan untuk melihat cerita lengkap produk.
-*   **Informasi Detail:** Mengetahui siapa petani, kapan dipanen, dan rute perjalanan produk.
-*   **Jaminan Keaslian:** Memastikan produk yang dibeli asli dan aman dikonsumsi.
+### 3. Konsumen - *The Verification*
+Konsumen memegang kendali atas informasi produk yang mereka beli.
+*   **Scan QR Code:** Konsumen memindai QR Satuan pada kemasan menggunakan aplikasi.
+*   **Transparansi Total:** Hasil scan menampilkan riwayat lengkap produk:
+    *   **Asal-usul:** Siapa petaninya dan kapan dipanen.
+    *   **Riwayat Perjalanan:** Rekaman suhu dan kondisi selama distribusi.
+    *   **Status Mutu:** Jaminan kualitas terakhir produk.
+*   **Trust:** Konsumen membeli dengan kepercayaan penuh karena data divalidasi oleh Blockchain.
 
 ---
 
@@ -68,6 +39,15 @@ Fokus pada verifikasi dan informasi produk.
 *   **Peta:** Expo Maps / Google Maps API
 *   **Kamera:** Expo Camera (untuk QR Scan)
 *   **Komponen UI:** Custom Components dengan desain modern dan responsif.
+
+### Backend & Infrastruktur 
+Untuk mendukung data dinamis dan skala besar, arsitektur backend dirancang menggunakan:
+*   **API Server:** Node.js (NestJS/Express) - Menangani logika bisnis dan RESTful API.
+*   **Database:**
+    *   **MySQL:** Penyimpanan data relasional (user, produk, transaksi).
+*   **Blockchain:** Hyperledger / Ethereum - Jaringan privat untuk mencatat **Blockchain ID Cryptonesse** (immutable ledger).
+*   **IoT Integration:** MQTT Protocol - Komunikasi ringan untuk sensor suhu/kelembaban di truk.
+*   **AI/ML Engine:** Python (TensorFlow/PyTorch) - Analisis data sensor untuk deteksi anomali dan prediksi kualitas.
 
 ---
 
